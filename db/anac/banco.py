@@ -1,6 +1,44 @@
 import sqlite3
 import pandas as pd
+import streamlit as st
 
+def get_connection():
+    try:
+        conn = sqlite3.connect("db/anac/banco_anac.db")
+        return conn
+    except Exception as e:
+        st.error(f"Erro ao conectar ao banco de dados: {str(e)}")
+        return None
+
+def execute_query(query, params=None, return_df=False):
+    conn = get_connection()
+    if not conn:
+        return None
+        
+    try:
+        cur = conn.cursor()
+        if params == None:
+            cur.execute(query)
+        else:
+            cur.execute(query, params)
+        
+        if query.strip().lower().startswith(('select', 'with')):
+            if return_df:
+                columns = [desc[0] for desc in cur.description]
+                data = cur.fetchall()
+                return pd.DataFrame(data, columns=columns)
+            else:
+                return cur.fetchall()
+        else:
+            conn.commit()
+            return cur.rowcount
+    except Exception as e:
+        st.error(f"Erro na execução da query: {str(e)}")
+        conn.rollback()
+        return None
+    finally:
+        conn.close()
+        
 def create_db_anac():
     conn = sqlite3.connect("db/anac/banco_anac.db")
     cursor = conn.cursor()
@@ -16,18 +54,18 @@ def create_db_anac():
         aeroporto_destino_sigla TEXT NOT NULL,
         aeroporto_destino_pais TEXT NOT NULL,
         natureza TEXT NOT NULL,
-        passageiros_pagos INTEGER NOT NULL,
-        carga_paga INTEGER NOT NULL,
-        ask INTEGER NOT NULL,
-        rpk INTEGER NOT NULL,
-        atk INTEGER NOT NULL,
-        rtk INTEGER NOT NULL,
-        litros_combustivel INTEGER NOT NULL,
-        distancia_voada_km INTEGER NOT NULL,
-        decolagens INTEGER NOT NULL,
-        horas_voadas INTEGER NOT NULL,
-        assentos INTEGER NOT NULL,
-        payload INTEGER NOT NULL
+        passageiros_pagos INTEGER,
+        carga_paga INTEGER,
+        ask INTEGER,
+        rpk INTEGER,
+        atk INTEGER,
+        rtk INTEGER,
+        litros_combustivel INTEGER,
+        distancia_voada_km INTEGER,
+        decolagens INTEGER,
+        horas_voadas INTEGER,
+        assentos INTEGER,
+        payload INTEGER
     )   
     ''')
 
