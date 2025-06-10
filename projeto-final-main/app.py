@@ -1,5 +1,5 @@
 import streamlit as st
-from db.banco import create_db
+from db.sono.banco import create_db
 
 def main():
     create_db()

@@ -4,7 +4,7 @@ import streamlit as st
 
 def get_connection():
     try:
-        conn = sqlite3.connect("db/banco_sono.db")
+        conn = sqlite3.connect("db/sono/banco_sono.db")
         return conn
     except Exception as e:
         st.error(f"Erro ao conectar ao banco de dados: {str(e)}")
@@ -40,7 +40,7 @@ def execute_query(query, params=None, return_df=False):
         conn.close()
 
 def create_db():
-    conn = sqlite3.connect("db/banco_sono.db")
+    conn = sqlite3.connect("db/sono/banco_sono.db")
     cursor = conn.cursor()
 
     cursor.execute('''

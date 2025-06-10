@@ -1,9 +1,11 @@
 import streamlit as st
-from db.banco import create_db
+from db.sono.banco import create_db
+from db.anac.banco import create_db_anac
 
 def main():
     create_db()
-
+    create_db_anac()
+    
     # SONO
     home_page_sleep = st.Page("frontend/sono/home.py", title="Dashboard", icon="🏠", default=True, url_path="/sono")
     analise_perfil = st.Page("frontend/sono/analise_perfil.py", title="Ánalise de Perfil", icon="🔎", url_path="/analise")
