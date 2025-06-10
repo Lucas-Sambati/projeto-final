@@ -4,13 +4,13 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.banco import execute_query
 
-def show_violin_chart():
-    query = """
+query = """
 SELECT profissao, condicao_sono, taxa_batimentos, nivel_estresse, genero
 FROM pessoas
 """  
-    df = execute_query(query, return_df=True)
+df = execute_query(query, return_df=True)
 
+def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
     fig, ax = plt.subplots()
     sns.countplot(df, y="profissao", ax=ax, palette="pastel")
@@ -18,6 +18,7 @@ FROM pessoas
     ax.set_xlabel('Contagem')
     st.pyplot(fig)
 
+def show_sleep_disorder_frequency_chart():
 # HEATMAP
     sleep_crosstab = pd.crosstab(
         df['profissao'], 
@@ -40,6 +41,7 @@ FROM pessoas
     plt.tight_layout()
     st.pyplot(fig)
 
+def show_stress_level_heart_rate_chart():
 # GRAFICO DE BARRAS\LINHA ESTRESSE E BATIMENTOS POR PROFISSAO
     agg_df = df.groupby('profissao').agg(
         avg_heart_rate=('taxa_batimentos', 'mean'),
@@ -74,6 +76,7 @@ FROM pessoas
     plt.tight_layout()
     st.pyplot(fig)
 
+def show_health_risk_per_occupation():
 # GRAFICO SCATTER
     risk_df = df.groupby('profissao').agg(
         sleep_apnea_prevalence=('condicao_sono', lambda x: (x == 'Sleep Apnea').mean()),
