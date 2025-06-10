@@ -14,5 +14,9 @@ with col1:
     colored_metric("EMPRESA COM MAIS VOOS", empresa_com_mais_voos(), "#0C3C78")
 with col2:
     colored_metric("TOTAL DE VOOS", total_voos(), "#0C3C78")
-
+with col3:
+    colored_metric("PASSAGEIROS PAGOS", total_passageiros_pagos(), "#0C3C78")
+    
 grafico_barras()
+
+st.dataframe(aeroportos_unicos())
