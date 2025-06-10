@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.sono.home import *
-
+from utils.sono.impactos_utils import show_stress_level_heart_rate_chart
 
 st.title('DASHBOARD')
 st.subheader('VISÃO GERAL | SONO, SAÚDE E LIFESTYLE', divider='gray')
@@ -25,3 +25,4 @@ with col6:
 with col7:
     colored_metric("RISCO CARDIOVASCULAR", f'{pessoas_com_risco_cardiovascular()}%', "#C62828")
 
+show_stress_level_heart_rate_chart()

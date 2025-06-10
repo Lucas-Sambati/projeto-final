@@ -79,3 +79,4 @@ def colored_metric(label, value, color):
         """,
         unsafe_allow_html=True
     )
+    
