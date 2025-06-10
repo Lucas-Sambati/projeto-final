@@ -1,6 +1,7 @@
 import streamlit as st
 from utils.sono.home import *
 
+
 st.title('DASHBOARD')
 st.subheader('VISÃO GERAL | SONO, SAÚDE E LIFESTYLE', divider='gray')
 
@@ -23,3 +24,4 @@ with col6:
     colored_metric("DISTURBIOS DE SONO", f'{prevalencia_disturbios()}%', "#EF6C00")
 with col7:
     colored_metric("RISCO CARDIOVASCULAR", f'{pessoas_com_risco_cardiovascular()}%', "#C62828")
+
