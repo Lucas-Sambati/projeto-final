@@ -17,6 +17,15 @@ def main():
         "ANAC": [home_page_anac]
     }
     pg = st.navigation(pages)
+    st.set_page_config(layout="wide")
+    st.markdown(
+        """
+        <style>
+        .stApp { background-color: #F5F7FA; color: #212121; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
     pg.run()
 
 
