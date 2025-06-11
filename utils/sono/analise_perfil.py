@@ -3,6 +3,7 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
+from io import BytesIO
 
 def grafico_distribuicao_numerica(coluna_numerica):
     df = execute_query(f"SELECT {coluna_numerica} FROM pessoas;", return_df=True)
@@ -17,8 +18,13 @@ def grafico_distribuicao_numerica(coluna_numerica):
     ax.set_xlabel(f'{coluna_numerica.replace("_", " ").title()}', fontsize=12)
     ax.set_ylabel('Frequência', fontsize=12)
     ax.grid(axis='y', linestyle='--', alpha=0.7)
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
 
-    st.pyplot(fig)
+    st.image(buf, width=1000)  
+
+    plt.close(fig)
 
 def grafico_frequencia_categorica(coluna_categorica):
     df = execute_query(f"SELECT {coluna_categorica} FROM pessoas;", return_df=True)
@@ -38,7 +44,13 @@ def grafico_frequencia_categorica(coluna_categorica):
     ax.tick_params(axis='y', labelsize=10) 
     ax.invert_yaxis() 
 
-    st.pyplot(fig)
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
+
+    st.image(buf, width=1000)  
+
+    plt.close(fig)
 
 def tabela_filtragens():
     df = execute_query("SELECT idade, genero, profissao, nivel_IMC, condicao_sono, nivel_estresse FROM pessoas;", return_df=True)
