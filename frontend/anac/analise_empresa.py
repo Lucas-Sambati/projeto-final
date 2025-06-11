@@ -3,12 +3,19 @@ from utils.anac.analise_empresa import grafico_barras, grafico_rpk_empresa, graf
 
 st.title("Análise de Empresas Aéreas")
 
-grafico_barras()
+col1, col2 = st.columns(2, vertical_alignment="center", border=True, gap="medium")
+col3, col4 = st.columns(2, vertical_alignment="center", border=True, gap="medium")
 
-grafico_rpk_empresa()
+# LINHA 1
+with col1:
+    grafico_barras()
+with col2:
+    grafico_rpk_empresa()
+# LINHA 2
+with col3:
+    grafico_donut_decolagens()
+with col4:
+    grafico_donut_passageiros()
 
-grafico_donut_decolagens()
-
-grafico_donut_passageiros()
-
-tabela_resumo()
+with st.expander("Mostrar Resumo"):
+    tabela_resumo()
