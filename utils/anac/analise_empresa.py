@@ -11,7 +11,7 @@ def grafico_barras():
     top_empresas = total_decolagens.nlargest(10, 'decolagens')['sigla_empresa']
     df_top = df[df['sigla_empresa'].isin(top_empresas)]
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10,6))
     sns.barplot( y='sigla_empresa', x='decolagens', hue='natureza', data=df_top, ax=ax, order=top_empresas)
     ax.set_title('Top 10 Empresas com Mais Decolagens', fontsize=16)
     ax.set_xlabel('Quantidade de Decolagens', fontsize=12)
@@ -21,7 +21,7 @@ def grafico_barras():
 def grafico_rpk_empresa():
     df = execute_query("SELECT sigla_empresa, SUM(rpk) AS total_rpk FROM viagens GROUP BY sigla_empresa ORDER BY total_rpk DESC", return_df=True)
     df_top = df.nlargest(20, 'total_rpk')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10,6))
     sns.barplot(x='total_rpk', y='sigla_empresa', data=df, ax=ax, order=df_top['sigla_empresa'])
     ax.set_title('Empresas com Mais RPK(Revenue Passenger Kilometers)', fontsize=16)
     ax.set_xlabel('RPK Total', fontsize=12)
@@ -41,7 +41,7 @@ def grafico_donut_decolagens():
 
     df_final = pd.concat([top_empresas, outros], ignore_index=True)
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.pie(
         df_final['participacao_mercado'],
         labels=df_final['sigla_empresa'],
@@ -65,7 +65,7 @@ def grafico_donut_passageiros():
 
     df_final = pd.concat([top_empresas, outros], ignore_index=True)
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.pie(
         df_final['participacao_mercado'],
         labels=df_final['sigla_empresa'],

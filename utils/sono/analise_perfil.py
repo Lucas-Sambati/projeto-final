@@ -56,16 +56,9 @@ def grafico_frequencia_categorica(coluna_categorica):
 def tabela_filtragens():
     df = execute_query("SELECT idade, genero, profissao, nivel_IMC, condicao_sono, nivel_estresse FROM pessoas;", return_df=True)
 
-    with st.container(border=True):
+    with st.container():
         min_idade_df = df['idade'].min()
         max_idade_df = df['idade'].max()
-        faixa_etaria = st.slider(
-            "Faixa Etária",
-            min_idade_df,
-            max_idade_df,
-            (min_idade_df, max_idade_df),
-            1
-        )
 
         col1, col2 = st.columns(2)
         col3, col4 = st.columns(2)
@@ -97,6 +90,16 @@ def tabela_filtragens():
                 "Distúrbio do Sono",
                 options=opcoes_disturbio,
                 default=None
+            )
+
+        _, slider, _ = st.columns([0.01, 0.98, 0.01])
+        with slider:
+            faixa_etaria = st.slider(
+            "Faixa Etária",
+            min_idade_df,
+            max_idade_df,
+            (min_idade_df, max_idade_df),
+            1
             )
 
     condicao_final = pd.Series(True, index=df.index)

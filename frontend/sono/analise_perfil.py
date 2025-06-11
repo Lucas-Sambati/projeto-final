@@ -13,5 +13,5 @@ with st.container(border=True):
     else: 
         grafico_frequencia_categorica(selecao)
 
-
-tabela_filtragens()
+with st.expander("Mostrar Filtragem"):
+    tabela_filtragens()
