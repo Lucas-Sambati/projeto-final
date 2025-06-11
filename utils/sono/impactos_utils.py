@@ -3,6 +3,7 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
+from io import BytesIO
 
 query = """
 SELECT profissao, condicao_sono, taxa_batimentos, nivel_estresse, genero
@@ -15,7 +16,13 @@ def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
     fig, ax = plt.subplots(figsize=(10,6))
     sns.countplot(df, y="profissao", ax=ax, hue="profissao", palette="pastel")
-    st.pyplot(fig)
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
+
+    st.image(buf, width=1000)  
+
+    plt.close(fig) 
 
 @st.cache_data
 def show_sleep_disorder_frequency_chart():
@@ -39,7 +46,13 @@ def show_sleep_disorder_frequency_chart():
     plt.ylabel('Profissão')
     plt.xlabel('Distúrbio do Sono')
     plt.tight_layout()
-    st.pyplot(fig)
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
+
+    st.image(buf, width=1000)  
+
+    plt.close(fig)
 
 @st.cache_data
 def show_stress_level_heart_rate_chart():
@@ -49,7 +62,7 @@ def show_stress_level_heart_rate_chart():
         avg_stress=('nivel_estresse', 'mean')
     ).reset_index().sort_values(by='avg_heart_rate', ascending=False)
 
-    fig, ax1 = plt.subplots(figsize=(10, 8))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
 
     sns.barplot(
         data=agg_df,
@@ -83,9 +96,14 @@ def show_stress_level_heart_rate_chart():
 
     plt.title('Batimentos Cardíacos e Estresse por Profissão', pad=20, fontsize=16)
     fig.tight_layout()
-    st.pyplot(fig)
-    
-@st.cache_data
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
+
+    st.image(buf, width=1000)  
+
+    plt.close(fig)
+
 def show_health_risk_per_occupation():
 # GRAFICO SCATTER
     risk_df = df.groupby('profissao').agg(
@@ -117,9 +135,14 @@ def show_health_risk_per_occupation():
             color='red'
         )
 
-    plt.title('Risco de Saúde por Profissão', fontsize=16)
     plt.xlabel('Prevalência de Apneia do Sono')
     plt.ylabel('Média de Batimentos Cardíacos')
     plt.grid(True, alpha=0.2)
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    st.pyplot(fig)
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    buf.seek(0)
+
+    st.image(buf, use_container_width=True)  
+
+    plt.close(fig)
