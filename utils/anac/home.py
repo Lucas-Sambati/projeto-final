@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
+from rotas_aeroportos import maiores_transportes_passageiros, maiores_transportes_carga
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -95,3 +96,5 @@ def aeroportos_unicos():
 
     st.plotly_chart(fig, use_container_width=True)
 
+maiores_transportes_passageiros()
+maiores_transportes_carga()
