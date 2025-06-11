@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
 
-
+@st.cache_data
 def grafico_aeroportos_maior_carga():
     df = execute_query("""
         SELECT aeroporto_origem_sigla, carga_paga AS carga_total
@@ -23,6 +23,7 @@ def grafico_aeroportos_maior_carga():
     
     st.pyplot(plt)
 
+@st.cache_data
 def grafico_aeroportos_mais_passageiros():
     df = execute_query("""
         SELECT aeroporto_origem_sigla, passageiros_pagos AS passageiros_totais

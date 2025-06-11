@@ -94,3 +94,14 @@ def aeroportos_unicos():
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
+def voos_improdutivos():
+    df = execute_query("SELECT assentos, passageiros_pagos FROM viagens WHERE assentos and passageiros_pagos IS NOT NULL", return_df=True)
+    
+    df['metrica'] = (df['passageiros_pagos'] / df['assentos']) * 100
+    total_voos = len(df)
+    df_final = df[df['metrica'] < 70]
+    total_voos_improdutivos = len(df_final)
+    porcentagem_voos_improdutivos = (total_voos_improdutivos / total_voos) * 100
+    
+    return f'{porcentagem_voos_improdutivos:.2f}%'

@@ -66,4 +66,3 @@ def media_idade():
 def get_df():
     df = execute_query("SELECT * FROM pessoas", return_df=True)
     return df
-
