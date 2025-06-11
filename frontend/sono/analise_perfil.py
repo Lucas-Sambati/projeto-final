@@ -1,19 +1,17 @@
 import streamlit as st
-from utils.sono.analise_perfil import grafico_idade, grafico_profissao_stress, grafico_imc_por_profissao, tabela_filtragens
+from utils.sono.analise_perfil import tabela_filtragens, grafico_frequencia_categorica, grafico_distribuicao_numerica
 
-st.write("Análise Perfil")
+st.title("Análise Perfil")
+st.divider()
+col, _ = st.columns([0.2, 0.8])
+with col:
+    selecao = st.selectbox("Selecione uma coluna",['idade', 'genero', 'profissao', 'nivel_IMC'])
 
-selecao = st.selectbox("",['idade', 'genero', 'profissao', 'nivel_IMC'])
-grafico_idade(selecao)
+with st.container(border=True):
+    if selecao == "idade":
+        grafico_distribuicao_numerica(selecao)
+    else: 
+        grafico_frequencia_categorica(selecao)
 
-grafico_profissao_stress(selecao)
 
 tabela_filtragens()
-
-import pandas as pd
-import streamlit as st
-import seaborn as sns
-import matplotlib.pyplot as plt
-from db.banco import execute_query
-
-

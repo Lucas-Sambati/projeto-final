@@ -1,0 +1,7 @@
+[theme]
+base="light"
+primaryColor="#4CAF50" # Um verde suave, ideal para botões e elementos interativos.
+secondaryBackgroundColor="#F0F2F6" # Um cinza muito claro, quase branco, para áreas de fundo secundárias.
+backgroundColor="#FFFFFF" # Branco puro para o fundo principal da aplicação.
+textColor="#333333" # Um cinza escuro suave para o texto, garantindo boa legibilidade.
+font="sans serif"
