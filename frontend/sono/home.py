@@ -29,5 +29,3 @@ with st.container(border=False):
 with st.container(border=True):
     heatmap_geral()    
 st.dataframe(get_df())
-
-

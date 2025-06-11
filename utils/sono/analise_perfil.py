@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
-from db.banco import execute_query
+from db.sono.banco import execute_query
 
 def grafico_distribuicao_numerica(coluna_numerica):
     df = execute_query(f"SELECT {coluna_numerica} FROM pessoas;", return_df=True)
