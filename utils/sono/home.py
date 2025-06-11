@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 
+@st.cache_data
 def heatmap_geral():
     df = execute_query("SELECT idade, duracao_sono, qualidade_sono, atividade_fisica, nivel_estresse, taxa_batimentos, passos_diarios FROM pessoas;", return_df=True)
     corr = df.corr()
@@ -15,18 +16,22 @@ def heatmap_geral():
         plt.tight_layout()
         st.pyplot(fig)
 
+@st.cache_data
 def profissao_mais_estressante():
     return 'Nurse'
 
+@st.cache_data
 def qtd_pessoas_analisadas():
     df = execute_query("SELECT id_pessoas FROM pessoas;", return_df=True)
     return df['id_pessoas'].count()
 
+@st.cache_data
 def media_duracao_sono():
     df = execute_query("SELECT duracao_sono FROM pessoas;", return_df=True)
     
     return int(df['duracao_sono'].mean())
 
+@st.cache_data
 def prevalencia_disturbios():
     df = execute_query('SELECT condicao_sono FROM pessoas', return_df=True)
     
@@ -38,6 +43,7 @@ def prevalencia_disturbios():
     
     return round(porcentagem_disturbios, 2)  
 
+@st.cache_data
 def pessoas_com_risco_cardiovascular():
     df = execute_query('SELECT pressao_sanguinea FROM pessoas', return_df=True)
     
@@ -58,11 +64,13 @@ def pessoas_com_risco_cardiovascular():
     
     return round(porcentagem_risco, 2)
 
+@st.cache_data
 def media_idade():
     df = execute_query("SELECT idade FROM pessoas", return_df=True)
     
     return int(df['idade'].mean())
 
+@st.cache_data
 def get_df():
     df = execute_query("SELECT * FROM pessoas", return_df=True)
     return df

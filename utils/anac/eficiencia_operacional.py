@@ -33,7 +33,7 @@ def grafico_horas_passageiros():
     
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.lineplot(data=df, x='horas_voadas', y='passageiros_pagos', ax=ax)
-    ax.set_title('Eficiência de Combustível vs Distância dos Voos')
+    ax.set_title('Variação Mensal de Horas Voadas vs Passageiros')
     ax.set_xlabel('Horas Voadas', fontsize=12)
     ax.set_ylabel('Número de Passageiros', fontsize=12)
     
@@ -45,7 +45,6 @@ def grafico_horas_passageiros():
 
     plt.close(fig)
     
-    return df
 
 
     

@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 
+@st.cache_data
 def heatmap_exercicio_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, atividade_fisica, passos_diarios FROM pessoas;", return_df=True)
     corr = df.corr()
@@ -11,6 +12,7 @@ def heatmap_exercicio_sono():
     plt.title('Correlação entre Exercicios e Qualidade/Duração do sono')
     st.pyplot(fig)
 
+@st.cache_data
 def heatmap_stress_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, nivel_estresse FROM pessoas;", return_df=True)
     corr = df.corr()
@@ -19,6 +21,7 @@ def heatmap_stress_sono():
     plt.title('Correlação entre Estresse e Qualidade/Duracao do sono')
     st.pyplot(fig)
 
+@st.cache_data
 def heatmap_obesidade_batimentos_sono():
     df = execute_query("SELECT nivel_IMC, taxa_batimentos, qualidade_sono FROM pessoas;", return_df=True)
     imc_mapping = {

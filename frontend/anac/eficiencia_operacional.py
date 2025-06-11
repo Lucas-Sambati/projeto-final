@@ -3,4 +3,4 @@ from utils.anac.eficiencia_operacional import *
 
 grafico_combustivel_voos()
 
-st.dataframe(grafico_horas_passageiros())
+grafico_horas_passageiros()

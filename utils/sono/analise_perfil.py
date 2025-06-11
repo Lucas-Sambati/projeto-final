@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 
+@st.cache_data
 def grafico_distribuicao_numerica(coluna_numerica):
     df = execute_query(f"SELECT {coluna_numerica} FROM pessoas;", return_df=True)
 

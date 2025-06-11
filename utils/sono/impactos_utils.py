@@ -10,12 +10,14 @@ FROM pessoas
 """  
 df = execute_query(query, return_df=True)
 
+@st.cache_data
 def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
     fig, ax = plt.subplots(figsize=(10,6))
     sns.countplot(df, y="profissao", ax=ax, hue="profissao", palette="pastel")
     st.pyplot(fig)
 
+@st.cache_data
 def show_sleep_disorder_frequency_chart():
 # HEATMAP
     sleep_crosstab = pd.crosstab(
@@ -39,6 +41,7 @@ def show_sleep_disorder_frequency_chart():
     plt.tight_layout()
     st.pyplot(fig)
 
+@st.cache_data
 def show_stress_level_heart_rate_chart():
     # GRAFICO DE BARRAS/LINHA ESTRESSE E BATIMENTOS POR PROFISSAO
     agg_df = df.groupby('profissao').agg(
@@ -81,7 +84,8 @@ def show_stress_level_heart_rate_chart():
     plt.title('Batimentos Cardíacos e Estresse por Profissão', pad=20, fontsize=16)
     fig.tight_layout()
     st.pyplot(fig)
-
+    
+@st.cache_data
 def show_health_risk_per_occupation():
 # GRAFICO SCATTER
     risk_df = df.groupby('profissao').agg(

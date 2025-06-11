@@ -6,6 +6,7 @@ from db.anac.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
 
+@st.cache_data
 def empresa_com_mais_voos():
     df = execute_query("SELECT sigla_empresa, decolagens FROM viagens", return_df=True)
     
@@ -13,16 +14,19 @@ def empresa_com_mais_voos():
     
     return df_empresas_com_mais_voo.loc[0, 'sigla_empresa']
 
+@st.cache_data
 def total_voos():
     df = execute_query("SELECT decolagens FROM viagens", return_df=True)
     
     return int(df['decolagens'].sum())
 
+@st.cache_data
 def total_passageiros():
     df = execute_query("SELECT passageiros_pagos FROM viagens", return_df=True)
     
     return int(df['passageiros_pagos'].sum())
 
+@st.cache_data
 def total_distancia_voada():
     df = execute_query("SELECT SUM(distancia_voada_km) AS total FROM viagens", return_df=True)
     total = df.iloc[0]['total']
@@ -82,6 +86,7 @@ def aeroportos_unicos():
 
     st.plotly_chart(fig, use_container_width=True)
 
+@st.cache_data
 def voos_improdutivos():
     df = execute_query("SELECT assentos, passageiros_pagos FROM viagens WHERE assentos and passageiros_pagos IS NOT NULL", return_df=True)
     
