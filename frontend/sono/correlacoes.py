@@ -2,8 +2,11 @@ import streamlit as st
 from utils.sono.correlacoes import heatmap_exercicio_sono, heatmap_stress_sono, heatmap_obesidade_batimentos_sono
 
 st.title("Correlações de sono com diversos fatores")
-heatmap_exercicio_sono()
-st.subheader("""Dados analisados: Duração do sono, qualidade do sono, atividade física e passos diários.
+st.divider()
+with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("""Dados analisados: Duração do sono, qualidade do sono, atividade física e passos diários.
 
 ***Principais observações***:
 
@@ -18,9 +21,15 @@ Possivelmente há uma correlação negativa entre atividade física intensa (mui
 Recomendar atividade física moderada para melhorar a qualidade do sono
 
 Alertar sobre possíveis efeitos negativos de exercícios excessivos na duração do sono""")
+    with col2:
+        heatmap_exercicio_sono()
 
-heatmap_stress_sono()
-st.subheader("""Dados analisados: Duração do sono, qualidade do sono e nível de estresse.
+with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        heatmap_stress_sono()
+    with col2:
+        st.subheader("""Dados analisados: Duração do sono, qualidade do sono e nível de estresse.
 
 ***Principais observações***:
 
@@ -36,8 +45,10 @@ Estratégias de redução de estresse são cruciais para melhorar a qualidade do
 
 Intervenções como mindfulness e técnicas de relaxamento podem ser particularmente eficazes""")
 
-heatmap_obesidade_batimentos_sono()
-st.subheader("""Dados analisados: Nível de IMC (convertido para escala numérica), taxa de batimentos cardíacos e qualidade do sono.
+with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("""Dados analisados: Nível de IMC (convertido para escala numérica), taxa de batimentos cardíacos e qualidade do sono.
 
 ***Principais observações***:
 
@@ -53,7 +64,11 @@ Controle de peso é importante não só para saúde cardiovascular mas também p
 
 Pessoas com IMC elevado podem se beneficiar de monitoramento cardíaco e intervenções para melhorar o sono""")
 
-st.title("Conclusões gerais")
+    with col2:
+        heatmap_obesidade_batimentos_sono()
+
+st.write("## Conclusões gerais")
+st.divider()
 st.subheader("""Fatores de estilo de vida (exercício, estresse, peso) têm impacto significativo na qualidade do sono
 
 Qualidade do sono parece ser mais sensível a esses fatores do que a duração do sono

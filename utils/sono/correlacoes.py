@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from db.sono.banco import execute_query
+from db.banco import execute_query
 
 def heatmap_exercicio_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, atividade_fisica, passos_diarios FROM pessoas;", return_df=True)
     corr = df.corr()
     fig, ax = plt.subplots()
-    sns.heatmap(corr, ax=ax, annot=True, cmap="YlGnBu")
+    sns.heatmap(corr, ax=ax, annot=True, cmap="Pastel1", fmt=".2f", linewidths=5)
     plt.title('Correlação entre Exercicios e Qualidade/Duração do sono')
     st.pyplot(fig)
 
@@ -16,7 +16,7 @@ def heatmap_stress_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, nivel_estresse FROM pessoas;", return_df=True)
     corr = df.corr()
     fig, ax = plt.subplots()
-    sns.heatmap(corr, ax=ax, annot=True, cmap="YlGnBu")
+    sns.heatmap(corr, ax=ax, annot=True, cmap="Pastel1", fmt=".2f", linewidths=5)
     plt.title('Correlação entre Estresse e Qualidade/Duracao do sono')
     st.pyplot(fig)
 
@@ -32,8 +32,10 @@ def heatmap_obesidade_batimentos_sono():
     df_numeric = df[['nivel_IMC_num', 'taxa_batimentos', 'qualidade_sono']]
     corr = df_numeric.corr()
     fig, ax = plt.subplots()
-    sns.heatmap(corr, ax=ax, annot=True, cmap="YlGnBu", 
+    sns.heatmap(corr, ax=ax, annot=True, cmap="Pastel1", 
                 xticklabels=['Nível IMC', 'Taxa Batimentos', 'Qualidade Sono'],
-                yticklabels=['Nível IMC', 'Taxa Batimentos', 'Qualidade Sono'])
+                yticklabels=['Nível IMC', 'Taxa Batimentos', 'Qualidade Sono'],
+                fmt=".2f",
+                linewidths=5)
     plt.title('Correlação entre IMC, Batimentos e Qualidade do Sono')
     st.pyplot(fig)

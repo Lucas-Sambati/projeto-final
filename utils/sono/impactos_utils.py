@@ -12,10 +12,8 @@ df = execute_query(query, return_df=True)
 
 def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
-    fig, ax = plt.subplots()
-    sns.countplot(df, y="profissao", ax=ax, palette="pastel")
-    ax.set_title('Distribuição de Profissões')
-    ax.set_xlabel('Contagem')
+    fig, ax = plt.subplots(figsize=(10,6))
+    sns.countplot(df, y="profissao", ax=ax, hue="profissao", palette="pastel")
     st.pyplot(fig)
 
 def show_sleep_disorder_frequency_chart():
@@ -26,7 +24,7 @@ def show_sleep_disorder_frequency_chart():
         normalize='index'
     )
 
-    fig, ax = plt.subplots() 
+    fig, ax = plt.subplots(figsize=(10,6)) 
     sns.heatmap(
         sleep_crosstab, 
         annot=True, 
@@ -42,38 +40,46 @@ def show_sleep_disorder_frequency_chart():
     st.pyplot(fig)
 
 def show_stress_level_heart_rate_chart():
-# GRAFICO DE BARRAS\LINHA ESTRESSE E BATIMENTOS POR PROFISSAO
+    # GRAFICO DE BARRAS/LINHA ESTRESSE E BATIMENTOS POR PROFISSAO
     agg_df = df.groupby('profissao').agg(
         avg_heart_rate=('taxa_batimentos', 'mean'),
         avg_stress=('nivel_estresse', 'mean')
-    ).reset_index()
+    ).reset_index().sort_values(by='avg_heart_rate', ascending=False)
 
-    fig, ax1 = plt.subplots(figsize=(14, 8))
+    fig, ax1 = plt.subplots(figsize=(10, 8))
 
     sns.barplot(
-        data=agg_df, 
-        x='profissao', 
-        y='avg_heart_rate',
+        data=agg_df,
+        x='avg_heart_rate',
+        y='profissao',
+        ax=ax1,
+        hue='profissao',
         palette="pastel",
-        ax=ax1
+        legend=False 
     )
-    ax1.set_ylabel('Média de Batimentos', color='royalblue')
+    ax1.set_xlabel('Média de Batimentos Cardíacos', color='royalblue', fontsize=12)
+    ax1.set_ylabel('Profissão', fontsize=12)
+    ax1.tick_params(axis='x', labelcolor='royalblue')
 
-    ax2 = ax1.twinx()
+    ax2 = ax1.twiny()
     sns.lineplot(
-        data=agg_df, 
-        x='profissao', 
-        y='avg_stress',
+        data=agg_df,
+        x='avg_stress',
+        y='profissao',
         color='crimson',
         marker='o',
         linewidth=2.5,
-        ax=ax2
+        ax=ax2,
+        label='Nível de Estresse'
     )
-    ax2.set_ylabel('Nível de Estresse', color='crimson')
+    ax2.set_xlabel('Nível Médio de Estresse', color='crimson', fontsize=12)
+    ax2.tick_params(axis='x', labelcolor='crimson')
+    
+    ax1.grid(False)
+    ax2.grid(False)
 
-    plt.title('Batimentos Cardíacos e Estresse por Profissão', pad=20)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    plt.title('Batimentos Cardíacos e Estresse por Profissão', pad=20, fontsize=16)
+    fig.tight_layout()
     st.pyplot(fig)
 
 def show_health_risk_per_occupation():
@@ -84,7 +90,7 @@ def show_health_risk_per_occupation():
         avg_stress=('nivel_estresse', 'mean')
     ).reset_index()
 
-    fig = plt.figure(figsize=(14, 10))
+    fig = plt.figure(figsize=(10, 6))
     scatter = sns.scatterplot(
         data=risk_df,
         x='sleep_apnea_prevalence',

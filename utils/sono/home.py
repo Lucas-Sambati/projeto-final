@@ -7,17 +7,13 @@ from db.sono.banco import execute_query
 def heatmap_geral():
     df = execute_query("SELECT idade, duracao_sono, qualidade_sono, atividade_fisica, nivel_estresse, taxa_batimentos, passos_diarios FROM pessoas;", return_df=True)
     corr = df.corr()
-    fig, ax = plt.subplots()
-    sns.heatmap(corr, ax=ax, annot=True, cmap="YlGnBu")
-    st.pyplot(fig)
-
-def boxplot_profissao_stress():
-    df = execute_query("SELECT profissao,nivel_estresse FROM pessoas;", return_df=True)
-
-    fig = plt.figure(figsize=(10, 6))
-    sns.boxplot(data=df, y="nivel_estresse", x="profissao")
-    plt.xticks(rotation=45)
-    st.pyplot(fig)
+    _, col, _ = st.columns([0.25, 0.5, 0.25], vertical_alignment="center")
+    with col:
+        st.write("### Correlação entre as colunas")
+        fig, ax = plt.subplots(figsize=(7, 7))
+        sns.heatmap(corr, ax=ax, annot=True, cmap="Greens", fmt=".2f", linewidths=5)
+        plt.tight_layout()
+        st.pyplot(fig)
 
 def profissao_mais_estressante():
     return 'Nurse'
@@ -67,16 +63,7 @@ def media_idade():
     
     return int(df['idade'].mean())
 
-def colored_metric(label, value, color):
-    st.markdown(
-        f"""
-        <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
-            {label}
-        </div>
-        <div style="color: {color}; font-size: 36px; font-weight: 600;">
-            {value}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
+def get_df():
+    df = execute_query("SELECT * FROM pessoas", return_df=True)
+    return df
+

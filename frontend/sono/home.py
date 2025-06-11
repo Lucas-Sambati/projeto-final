@@ -1,28 +1,31 @@
 import streamlit as st
 from utils.sono.home import *
-from utils.sono.impactos_utils import show_stress_level_heart_rate_chart
 
 st.title('DASHBOARD')
-st.subheader('VISÃO GERAL | SONO, SAÚDE E LIFESTYLE', divider='gray')
+st.subheader('VISÃO GERAL -> SONO, SAÚDE E LIFESTYLE')
+st.divider()
 
-st.write('')
-st.write('')
+with st.container(border=False):
+    col1, col2, col3, col4, col5, col6 = st.columns(6, vertical_alignment="center")
 
+    with col1:
+        st.metric("PROFISSÃO MAIS ESTRESSANTE", profissao_mais_estressante())
 
-col1, col2, col3, col5, col6, col7 = st.columns(6)
+    with col2:
+        st.metric("PESSOAS ANALISADAS", qtd_pessoas_analisadas())
 
-with col1:
-    colored_metric("PROFISSÃO MAIS ESTRESSANTE", profissao_mais_estressante(), "#0C3C78")
-with col2:
-    colored_metric("PESSOAS ANALISADAS", qtd_pessoas_analisadas(), "#333333")
-with col3:
-    colored_metric("MÉDIA DE IDADE", media_idade(), "#333333")
+    with col3:
+        st.metric("MÉDIA DE IDADE", media_idade())
 
-with col5:
-    colored_metric("MÉDIA DURAÇÃO SONO", media_duracao_sono(), "#2E7D32")
-with col6:
-    colored_metric("DISTURBIOS DE SONO", f'{prevalencia_disturbios()}%', "#EF6C00")
-with col7:
-    colored_metric("RISCO CARDIOVASCULAR", f'{pessoas_com_risco_cardiovascular()}%', "#C62828")
+    with col4:
+        st.metric("MÉDIA DURAÇÃO SONO", media_duracao_sono())
 
-show_stress_level_heart_rate_chart()
+    with col5:
+        st.metric("DISTURBIOS DE SONO", f'{prevalencia_disturbios()}%')
+
+    with col6:
+        st.metric("RISCO CARDIOVASCULAR", f'{pessoas_com_risco_cardiovascular()}%')
+
+with st.container(border=True):
+    heatmap_geral()    
+st.dataframe(get_df())

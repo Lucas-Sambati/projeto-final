@@ -1,0 +1,26 @@
+/* style.css */
+
+/* --- Estilo para st.metric --- */
+[data-testid="stMetric"] {
+    background-color: #eaf2f8;
+    border: 1px solid #bee3f8;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-testid="stMetricLabel"] {
+    font-size: 16px;
+    color: #4a5568;
+}
+
+[data-testid="stMetricValue"] {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1a365d;
+}
+
+[data-testid="stMetricDelta"] {
+    font-size: 14px;
+    font-weight: 500;
+}
