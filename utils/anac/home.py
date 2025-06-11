@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
+from rotas_aeroportos import maiores_transportes_passageiros, maiores_transportes_carga
 import plotly.express as px
 
 def colored_metric(label, value, color):
@@ -92,3 +93,5 @@ def aeroportos_unicos():
     
     return df[['aeroporto_destino_sigla', 'origem_lat', 'origem_lon']].drop_duplicates().reset_index(drop=True)
 
+maiores_transportes_passageiros()
+maiores_transportes_carga()
