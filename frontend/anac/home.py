@@ -64,12 +64,13 @@ if st.button("Resetar Filtros"):
 def parse_code(option):
     return option.split(" - ")[0] if option else None
 
-draw_filtered_map(
-    origin_airport=parse_code(origin_airport),
-    destination_airport=parse_code(destination_airport),
-    origin_country=origin_country if parse_code(origin_country) else None,
-    destination_country=destination_country if parse_code(destination_country) else None
-)
+with st.container(border=True):
+    draw_filtered_map(
+        origin_airport=parse_code(origin_airport),
+        destination_airport=parse_code(destination_airport),
+        origin_country=origin_country if parse_code(origin_country) else None,
+        destination_country=destination_country if parse_code(destination_country) else None
+    )
 
 
 
