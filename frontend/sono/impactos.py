@@ -11,26 +11,30 @@ st.markdown("""
 Este dashboard analisa como diferentes profissões se relacionam com a qualidade do sono, níveis de estresse e saúde cardíaca.
 """)
 
-with st.container(border=True):
-    st.header("1. Distribuição de Profissionais na Amostra")
+
+st.header("1. Distribuição de Profissionais na Amostra")
+with st.container(border=False):
     show_occupation_count_chart()
+
+st.divider()
 
 st.header("2. Análise Comparativa por Profissão")
 col1, col2 = st.columns(2)
 
 with col1:
-    with st.container(border=True, height=603):
+    with st.container(border=True, height=530):
         st.subheader("Frequência de Distúrbios do Sono")
         show_sleep_disorder_frequency_chart()
 
 with col2:
-    with st.container(border=True, height=603):
+    with st.container(border=True, height=530):
         st.subheader("Estresse vs. Batimentos Cardíacos")
         show_stress_level_heart_rate_chart()
 
-with st.container(border=True):
-    st.header("3. Síntese do Risco de Saúde por Profissão")
-    st.markdown("Análise combinada de prevalência de apneia do sono, batimentos cardíacos e nível de estresse.")
+st.divider()
+
+st.header("3. Síntese do Risco de Saúde por Profissão")
+with st.container(border=False):
     show_health_risk_per_occupation()
 
     
