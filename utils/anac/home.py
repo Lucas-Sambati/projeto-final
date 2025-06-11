@@ -6,19 +6,6 @@ from db.anac.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
 
-def colored_metric(label, value, color):
-    st.markdown(
-        f"""
-        <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
-            {label}
-        </div>
-        <div style="color: {color}; font-size: 36px; font-weight: 600;">
-            {value}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
 def empresa_com_mais_voos():
     df = execute_query("SELECT sigla_empresa, decolagens FROM viagens", return_df=True)
     
