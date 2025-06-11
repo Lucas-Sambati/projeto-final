@@ -22,8 +22,54 @@ with col6:
     st.metric("VOOS IMPRODUTIVOS (%)", voos_improdutivos())
 
 st.write("## Rotas")
-with st.container(border=True):
-    aeroportos_unicos()
+
+query_params = st.query_params
+reset_triggered = "reset" in query_params
+
+if reset_triggered:
+    st.query_params.clear()
+
+origin_airport = st.selectbox(
+    "Aeroporto de Origem",
+    [""] + get_origin_airport_options(),
+    index=0 if reset_triggered else None,
+    key="origin_airport"
+)
+
+destination_airport = st.selectbox(
+    "Aeroporto de Destino",
+    [""] + get_destination_airport_options(),
+    index=0 if reset_triggered else None,
+    key="destination_airport"
+)
+
+origin_country = st.selectbox(
+    "País de Origem",
+    [""] + get_origin_country_options(),
+    index=0 if reset_triggered else None,
+    key="origin_country"
+)
+
+destination_country = st.selectbox(
+    "País de Destino",
+    [""] + get_destination_country_options(),
+    index=0 if reset_triggered else None,
+    key="destination_country"
+)
+
+if st.button("Resetar Filtros"):
+    st.query_params["reset"] = "true"
+    st.rerun()
+
+def parse_code(option):
+    return option.split(" - ")[0] if option else None
+
+draw_filtered_map(
+    origin_airport=parse_code(origin_airport),
+    destination_airport=parse_code(destination_airport),
+    origin_country=origin_country if parse_code(origin_country) else None,
+    destination_country=destination_country if parse_code(destination_country) else None
+)
 
 
 
