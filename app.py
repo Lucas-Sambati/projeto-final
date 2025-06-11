@@ -23,9 +23,10 @@ def main():
 
     # ANAC
     home_page_anac = st.Page("frontend/anac/home.py", title="Dashboard", icon="🏠", url_path="/anac")
+    rotas_aeroportos = st.Page("frontend/anac/rotas_aeroportos.py", title="Rotas e Aeroportos", icon="✈️", url_path="/rotas")
     pages = {
         "Sleep Health and Lifestyle": [home_page_sleep, analise_perfil, correlacoes, impactos],
-        "ANAC": [home_page_anac]
+        "ANAC": [home_page_anac, rotas_aeroportos]
     }
     pg = st.navigation(pages)
     pg.run()
