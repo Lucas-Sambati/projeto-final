@@ -23,7 +23,7 @@ def main():
 
     # ANAC
     home_page_anac = st.Page("frontend/anac/home.py", title="Dashboard", icon="🏠", url_path="/anac")
-    analise_empresas = st.Page("frontend/anac/analise_empresas.py", title="Análise das Empresas", icon="🔍", url_path="/empresa")
+    analise_empresas = st.Page("frontend/anac/analise_empresa.py", title="Análise das Empresas", icon="🔍", url_path="/empresa")
     rotas_aeroportos = st.Page("frontend/anac/rotas_aeroportos.py", title="Rotas e Aeroportos", icon="✈️", url_path="/rotas")
     eficiencia_operacional = st.Page("frontend/anac/eficiencia_operacional.py", title="Eficiencia Operacional", icon="⚙️", url_path="/eficiencia")
     pages = {
