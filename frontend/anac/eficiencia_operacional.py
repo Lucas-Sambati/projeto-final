@@ -1,6 +1,9 @@
 import streamlit as st
 from utils.anac.eficiencia_operacional import *
 
-grafico_combustivel_voos()
+col1, col2 = st.columns(2, gap='medium', border=True)
+with col1:
+    grafico_combustivel_voos()
 
-grafico_horas_passageiros()
+with col2:
+    grafico_horas_passageiros()
