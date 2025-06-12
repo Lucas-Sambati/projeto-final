@@ -5,9 +5,10 @@ st.title('DASHBOARD')
 st.subheader('VISÃO GERAL -> SONO, SAÚDE E LIFESTYLE')
 st.divider()
 
-with st.container(border=False):
-    col1, col2, col3, col4, col5, col6 = st.columns(6, vertical_alignment="center")
+col1, col2, col3, col4, col5, col6 = st.columns(6, vertical_alignment="center", border=False)
 
+
+with st.container():
     with col1:
         st.metric("PESSOAS ANALISADAS", qtd_pessoas_analisadas())
 
