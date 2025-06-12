@@ -29,7 +29,7 @@ def qtd_pessoas_analisadas():
 def media_duracao_sono():
     df = execute_query("SELECT duracao_sono FROM pessoas;", return_df=True)
     
-    return int(df['duracao_sono'].mean())
+    return f'{float(df['duracao_sono'].mean()):.1f}h'
 
 @st.cache_data
 def prevalencia_disturbios():
@@ -65,10 +65,16 @@ def pessoas_com_risco_cardiovascular():
     return round(porcentagem_risco, 2)
 
 @st.cache_data
-def media_idade():
-    df = execute_query("SELECT idade FROM pessoas", return_df=True)
+def media_qualidade_sono():
+    df = execute_query("SELECT qualidade_sono FROM pessoas", return_df=True)
     
-    return int(df['idade'].mean())
+    return f'{df['qualidade_sono'].mean():.1f}/10'
+
+@st.cache_data
+def media_nivel_estresse():
+    df = execute_query("SELECT nivel_estresse FROM pessoas", return_df=True)
+    
+    return f'{df['nivel_estresse'].mean():.1f}/10'
 
 @st.cache_data
 def get_df():
