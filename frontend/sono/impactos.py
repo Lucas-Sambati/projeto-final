@@ -13,28 +13,25 @@ Este dashboard analisa como diferentes profissões se relacionam com a qualidade
 
 
 st.header("1. Distribuição de Profissionais na Amostra")
-with st.container(border=False):
+with st.container():
     show_occupation_count_chart()
 
 st.divider()
 
 st.header("2. Análise Comparativa por Profissão")
-col1, col2 = st.columns(2)
+with st.container(border=True):
+    col1, col2 = st.columns(2)
 
-with col1:
-    with st.container(border=True, height=530):
-        st.subheader("Frequência de Distúrbios do Sono")
+    with col1:
         show_sleep_disorder_frequency_chart()
 
-with col2:
-    with st.container(border=True, height=530):
-        st.subheader("Estresse vs. Batimentos Cardíacos")
+    with col2:
         show_stress_level_heart_rate_chart()
 
 st.divider()
 
 st.header("3. Síntese do Risco de Saúde por Profissão")
-with st.container(border=False):
+with st.container():
     show_health_risk_per_occupation()
 
     
