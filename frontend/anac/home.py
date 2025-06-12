@@ -21,7 +21,7 @@ with col5:
 with col6:
     st.metric("VOOS IMPRODUTIVOS (%)", voos_improdutivos())
 
-st.write("## Rotas")
+st.write("\n## Rotas")
 
 query_params = st.query_params
 reset_triggered = "reset" in query_params
@@ -29,35 +29,42 @@ reset_triggered = "reset" in query_params
 if reset_triggered:
     st.query_params.clear()
 
-origin_airport = st.selectbox(
-    "Aeroporto de Origem",
-    [""] + get_origin_airport_options(),
-    index=0 if reset_triggered else None,
-    key="origin_airport"
-)
+options = st.radio("Filtrar por", ["aeroporto", "país"], horizontal=True)
+origin_airport = None
+destination_airport = None
+origin_country = None
+destination_country = None
+col1, col2, col3 = st.columns([0.45, 0.45, 0.1], vertical_alignment="bottom")
+match options:
+    case "aeroporto":
+        origin_airport = col1.selectbox(
+            "Aeroporto de Origem",
+            [""] + get_origin_airport_options(),
+            index=0 if reset_triggered else None,
+            key="origin_airport"
+        )
+        destination_airport = col2.selectbox(
+            "Aeroporto de Destino",
+            [""] + get_destination_airport_options(),
+            index=0 if reset_triggered else None,
+            key="destination_airport"
+        )
+    case "país":
+        origin_country = col1.selectbox(
+            "País de Origem",
+            [""] + get_origin_country_options(),
+            index=0 if reset_triggered else None,
+            key="origin_country"
+        )
 
-destination_airport = st.selectbox(
-    "Aeroporto de Destino",
-    [""] + get_destination_airport_options(),
-    index=0 if reset_triggered else None,
-    key="destination_airport"
-)
+        destination_country = col2.selectbox(
+            "País de Destino",
+            [""] + get_destination_country_options(),
+            index=0 if reset_triggered else None,
+            key="destination_country"
+        )
 
-origin_country = st.selectbox(
-    "País de Origem",
-    [""] + get_origin_country_options(),
-    index=0 if reset_triggered else None,
-    key="origin_country"
-)
-
-destination_country = st.selectbox(
-    "País de Destino",
-    [""] + get_destination_country_options(),
-    index=0 if reset_triggered else None,
-    key="destination_country"
-)
-
-if st.button("Resetar Filtros"):
+if col3.button("Resetar Filtros"):
     st.query_params["reset"] = "true"
     st.rerun()
 
