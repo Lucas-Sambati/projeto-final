@@ -24,8 +24,6 @@ def grafico_distribuicao_numerica(coluna_numerica):
             x='Idade',
             y='Frequencia',
             orientation='v',
-            title="Top 10 Empresas por Passageiros",
-            labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
             height=600
         )
     st.plotly_chart(fig, use_container_width=True)
