@@ -3,18 +3,25 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
+import plotly.express as px
+import plotly.graph_objects as go
 
 @st.cache_data
 def heatmap_geral():
     df = execute_query("SELECT idade, duracao_sono, qualidade_sono, atividade_fisica, nivel_estresse, taxa_batimentos, passos_diarios FROM pessoas;", return_df=True)
-    corr = df.corr()
-    _, col, _ = st.columns([0.25, 0.5, 0.25], vertical_alignment="center")
-    with col:
-        st.write("### Correlação entre as colunas")
-        fig, ax = plt.subplots(figsize=(7, 7))
-        sns.heatmap(corr, ax=ax, annot=True, cmap="Greens", fmt=".2f", linewidths=5)
-        plt.tight_layout()
-        st.pyplot(fig)
+    
+    st.subheader("MATRIZ DE CORRELAÇÕES")
+    numeric_cols = ['idade', 'duracao_sono', 'qualidade_sono', 'atividade_fisica', 
+                   'nivel_estresse', 'taxa_batimentos', 'passos_diarios']
+    corr_matrix = df[numeric_cols].corr()
+    
+    fig_corr = px.imshow(
+        corr_matrix,
+        text_auto=True,
+        aspect="auto",
+        color_continuous_scale='RdBu_r'
+    )
+    st.plotly_chart(fig_corr, use_container_width=True)
 
 @st.cache_data
 def profissao_mais_estressante():
@@ -29,7 +36,7 @@ def qtd_pessoas_analisadas():
 def media_duracao_sono():
     df = execute_query("SELECT duracao_sono FROM pessoas;", return_df=True)
     
-    return int(df['duracao_sono'].mean())
+    return f'{float(df['duracao_sono'].mean()):.1f}h'
 
 @st.cache_data
 def prevalencia_disturbios():
@@ -65,10 +72,16 @@ def pessoas_com_risco_cardiovascular():
     return round(porcentagem_risco, 2)
 
 @st.cache_data
-def media_idade():
-    df = execute_query("SELECT idade FROM pessoas", return_df=True)
+def media_qualidade_sono():
+    df = execute_query("SELECT qualidade_sono FROM pessoas", return_df=True)
     
-    return int(df['idade'].mean())
+    return f'{df['qualidade_sono'].mean():.1f}/10'
+
+@st.cache_data
+def media_nivel_estresse():
+    df = execute_query("SELECT nivel_estresse FROM pessoas", return_df=True)
+    
+    return f'{df['nivel_estresse'].mean():.1f}/10'
 
 @st.cache_data
 def get_df():

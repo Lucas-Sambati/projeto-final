@@ -17,6 +17,10 @@ st.markdown("""
 
 st.title("Top 10 Aeroportos por categoria")
 
+col0 = st.columns(1, gap='medium', border=True)[0]
+with col0:
+    grafico_aeroportos_decolagens()
+
 col1, col2 = st.columns(2, gap='medium', border=True)
 with col1:
     grafico_aeroportos_maior_carga()
