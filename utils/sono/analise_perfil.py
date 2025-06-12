@@ -24,8 +24,7 @@ def grafico_distribuicao_numerica(coluna_numerica):
             x='Idade',
             y='Frequencia',
             orientation='v',
-            title="Top 10 Empresas por Passageiros",
-            labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
+            title=f"Distribuição de Pessoas por {coluna_numerica}",
             color_discrete_sequence=px.colors.diverging.RdBu_r,
             height=600
         )
@@ -44,8 +43,7 @@ def grafico_frequencia_categorica(coluna_categorica):
             orientation='h',
             color=coluna_categorica,
             color_discrete_sequence=px.colors.diverging.RdBu_r,
-            title="Top 10 Empresas por Passageiros",
-            labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
+            title=f"Distribuição de Pessoas por {coluna_categorica}",
             height=600
         )
     st.plotly_chart(fig, use_container_width=True)

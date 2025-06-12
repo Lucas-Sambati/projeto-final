@@ -4,7 +4,6 @@ import sqlite3
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from backend import *
 
 # Page configuration
 st.set_page_config(
@@ -335,56 +334,6 @@ def show_anac_dashboard():
     # Data table
     st.subheader("Dados Filtrados")
     st.dataframe(filtered_df, use_container_width=True)
-    
-    st.subheader("Visualização de Rotas")
-    query_params = st.query_params
-    reset_triggered = "reset" in query_params
-
-    if reset_triggered:
-        st.query_params.clear()
-
-    origin_airport = st.selectbox(
-        "Aeroporto de Origem",
-        [""] + get_origin_airport_options(),
-        index=0 if reset_triggered else None,
-        key="origin_airport"
-    )
-
-    destination_airport = st.selectbox(
-        "Aeroporto de Destino",
-        [""] + get_destination_airport_options(),
-        index=0 if reset_triggered else None,
-        key="destination_airport"
-    )
-
-    origin_country = st.selectbox(
-        "País de Origem",
-        [""] + get_origin_country_options(),
-        index=0 if reset_triggered else None,
-        key="origin_country"
-    )
-
-    destination_country = st.selectbox(
-        "País de Destino",
-        [""] + get_destination_country_options(),
-        index=0 if reset_triggered else None,
-        key="destination_country"
-    )
-
-    if st.button("Resetar Filtros"):
-        st.query_params["reset"] = "true"
-        st.rerun()
-
-    def parse_code(option):
-        return option.split(" - ")[0] if option else None
-
-    with st.container(border=True):
-        draw_filtered_map(
-            origin_airport=parse_code(origin_airport),
-            destination_airport=parse_code(destination_airport),
-            origin_country=origin_country if parse_code(origin_country) else None,
-            destination_country=destination_country if parse_code(destination_country) else None
-        )
 
 if __name__ == "__main__":
     main()

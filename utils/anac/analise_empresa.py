@@ -3,6 +3,8 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
+import plotly.express as px
+import plotly.graph_objects as go
 
 def grafico_barras():
     df = execute_query("SELECT sigla_empresa, natureza, SUM(decolagens) AS decolagens FROM viagens GROUP BY sigla_empresa, natureza ORDER BY decolagens DESC", return_df=True)
@@ -10,23 +12,37 @@ def grafico_barras():
     total_decolagens = df.groupby('sigla_empresa')['decolagens'].sum().reset_index()
     top_empresas = total_decolagens.nlargest(10, 'decolagens')['sigla_empresa']
     df_top = df[df['sigla_empresa'].isin(top_empresas)]
-
-    fig, ax = plt.subplots(figsize=(10,6))
-    sns.barplot( y='sigla_empresa', x='decolagens', hue='natureza', data=df_top, ax=ax, order=top_empresas)
-    ax.set_title('Top 10 Empresas com Mais Decolagens', fontsize=16)
-    ax.set_xlabel('Quantidade de Decolagens', fontsize=12)
-    ax.set_ylabel('Empresa', fontsize=12)
-    st.pyplot(fig)
+    
+    fig = px.bar(
+            df_top,
+            x='decolagens',
+            y='sigla_empresa',
+            orientation='h',
+            barmode='group',
+            title=f"Top 10 Empresas com Mais Decolagens",
+            color='natureza',
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
 
 def grafico_rpk_empresa():
     df = execute_query("SELECT sigla_empresa, SUM(rpk) AS total_rpk FROM viagens GROUP BY sigla_empresa ORDER BY total_rpk DESC", return_df=True)
     df_top = df.nlargest(20, 'total_rpk')
-    fig, ax = plt.subplots(figsize=(10,6))
-    sns.barplot(x='total_rpk', y='sigla_empresa', data=df, ax=ax, order=df_top['sigla_empresa'])
-    ax.set_title('Empresas com Mais RPK(Revenue Passenger Kilometers)', fontsize=16)
-    ax.set_xlabel('RPK Total', fontsize=12)
-    ax.set_ylabel('Empresa', fontsize=12)
-    st.pyplot(fig)
+
+    fig = px.bar(
+            df_top,
+            x='total_rpk',
+            y='sigla_empresa',
+            barmode='group',
+            orientation='h',
+            title=f"Empresas com Mais RPK(Revenue Passenger Kilometers)",
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
 
 def grafico_donut_decolagens():
     df = execute_query("SELECT sigla_empresa, SUM(decolagens) AS total_decolagens FROM viagens GROUP BY sigla_empresa ORDER BY total_decolagens DESC", return_df=True)
@@ -41,16 +57,23 @@ def grafico_donut_decolagens():
 
     df_final = pd.concat([top_empresas, outros], ignore_index=True)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.pie(
-        df_final['participacao_mercado'],
-        labels=df_final['sigla_empresa'],
-        autopct='%1.1f%%',
-        startangle=90,
-        wedgeprops={'width': 0.3}
+    fig = px.pie(
+        df_final, 
+        names='sigla_empresa', 
+        values='participacao_mercado', 
+        hole=0.6,  
+        color_discrete_sequence = px.colors.diverging.RdBu_r,
+        width=600,
+        height=600
     )
-    ax.set_title("Participação de Mercado por Decolagens", fontsize=16)
-    st.pyplot(fig)
+
+    fig.update_traces(textinfo='percent+label') 
+    fig.update_layout(
+        title='Participação de Mercado por Decolagens',     
+        font=dict(family="Arial", size=14, color="#212121"),          
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 def grafico_donut_passageiros():
     df = execute_query("SELECT sigla_empresa, SUM(passageiros_pagos) AS total_passageiros FROM viagens GROUP BY sigla_empresa ORDER BY total_passageiros DESC", return_df=True)
@@ -65,16 +88,23 @@ def grafico_donut_passageiros():
 
     df_final = pd.concat([top_empresas, outros], ignore_index=True)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.pie(
-        df_final['participacao_mercado'],
-        labels=df_final['sigla_empresa'],
-        autopct='%1.1f%%',
-        startangle=90,
-        wedgeprops={'width': 0.3}
+    fig = px.pie(
+        df_final, 
+        names='sigla_empresa', 
+        values='participacao_mercado', 
+        hole=0.6,  
+        color_discrete_sequence = px.colors.diverging.RdBu_r,
+        width=600,
+        height=600
     )
-    ax.set_title("Participação de Mercado por Passageiros", fontsize=16)
-    st.pyplot(fig)
+
+    fig.update_traces(textinfo='percent+label') 
+    fig.update_layout(
+        title='Participação de Mercado por Passageiros',     
+        font=dict(family="Arial", size=14, color="#212121"),          
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 def tabela_resumo():
     st.subheader("Tabela de Métricas")

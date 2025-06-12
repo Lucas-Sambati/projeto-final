@@ -3,6 +3,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
+import plotly.express as px
+import plotly.graph_objects as go
 
 @st.cache_data
 def grafico_aeroportos_decolagens():
@@ -11,13 +13,20 @@ def grafico_aeroportos_decolagens():
     total_decolagens = df.groupby('aeroporto_origem_sigla')['decolagens'].sum().reset_index()
     top_empresas = total_decolagens.nlargest(10, 'decolagens')['aeroporto_origem_sigla']
     df_top = df[df['aeroporto_origem_sigla'].isin(top_empresas)]
-
-    fig, ax = plt.subplots(figsize=(10,4))
-    sns.barplot( y='aeroporto_origem_sigla', x='decolagens', hue='natureza', data=df_top, ax=ax, order=top_empresas, palette="viridis")
-    ax.set_title('Top 10 Aeroportos com Mais Decolagens', fontsize=16)
-    ax.set_xlabel('Quantidade de Decolagens', fontsize=12)
-    ax.set_ylabel('Aeroportos', fontsize=12)
-    st.pyplot(fig)
+    
+    fig = px.bar(
+            df_top,
+            x='decolagens',
+            y='aeroporto_origem_sigla',
+            orientation='h',
+            title=f"Top 10 Aeroportos com Mais Decolagens",
+            color='natureza',
+            barmode='group',
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
 
 @st.cache_data
 def grafico_aeroportos_maior_carga():
@@ -30,13 +39,17 @@ def grafico_aeroportos_maior_carga():
         LIMIT 10;
     """, return_df=True)
     
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x='carga_total', y='aeroporto_origem_sigla', data=df, palette="viridis")    
-    plt.xlabel('carga_paga')
-    plt.ylabel('aeroporto_origem_sigla')
-    plt.title('Top 10 Aeroportos com Mais Carga Transportada')
-    
-    st.pyplot(plt)
+    fig = px.bar(
+            df,
+            x='carga_total',
+            y='aeroporto_origem_sigla',
+            orientation='h',
+            title=f"Top 10 Aeroportos com Mais Carga Transportada",
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
 
 @st.cache_data
 def grafico_aeroportos_mais_passageiros():
@@ -49,10 +62,14 @@ def grafico_aeroportos_mais_passageiros():
         LIMIT 10;
     """, return_df=True)
     
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x='passageiros_totais', y='aeroporto_origem_sigla', data=df, palette="viridis")    
-    plt.xlabel('passageiros_totais')
-    plt.ylabel('aeroporto_origem_sigla')
-    plt.title('Top 10 Aeroportos com Mais Passageiros Transportados')
-    
-    st.pyplot(plt)
+    fig = px.bar(
+            df,
+            x='passageiros_totais',
+            y='aeroporto_origem_sigla',
+            orientation='h',
+            title=f"Top 10 Aeroportos com Mais Passageiros Transportados",
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)

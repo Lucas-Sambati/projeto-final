@@ -107,7 +107,6 @@ def show_stress_level_heart_rate_chart():
             title=dict(text='Profissão'),
             automargin=True
         ),
-        height=600,
         template='simple_white'
     )
 
