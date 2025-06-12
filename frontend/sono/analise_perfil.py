@@ -7,7 +7,7 @@ col, _ = st.columns([0.2, 0.8])
 with col:
     selecao = st.selectbox("Selecione uma coluna",['idade', 'genero', 'profissao', 'nivel_IMC'])
 
-with st.container(border=True):
+with st.container():
     if selecao == "idade":
         grafico_distribuicao_numerica(selecao)
     else: 

@@ -5,9 +5,6 @@ st.title('DASHBOARD')
 st.subheader('VISÃO GERAL | AGÊNCIA NACIONAL DE AVIAÇÃO CIVIL')
 st.divider()
 
-st.write('')
-
-
 col2, col3, col4, col5, col6 = st.columns(5)
 
 with col2:
@@ -21,6 +18,7 @@ with col5:
 with col6:
     st.metric("VOOS IMPRODUTIVOS (%)", voos_improdutivos())
 
+st.divider()
 st.write("## Rotas")
 
 query_params = st.query_params
