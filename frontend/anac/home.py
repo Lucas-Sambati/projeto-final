@@ -21,7 +21,7 @@ with col5:
 with col6:
     st.metric("VOOS IMPRODUTIVOS (%)", voos_improdutivos())
 
-st.write("\n## Rotas")
+st.write("## Rotas")
 
 query_params = st.query_params
 reset_triggered = "reset" in query_params
