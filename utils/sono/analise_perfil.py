@@ -24,6 +24,7 @@ def grafico_distribuicao_numerica(coluna_numerica):
             x='Idade',
             y='Frequencia',
             orientation='v',
+            title="Frequência por idade",
             height=600
         )
     st.plotly_chart(fig, use_container_width=True)
