@@ -51,7 +51,7 @@ def load_route_data():
 
 @st.cache_data
 def enrich_with_airport_info(df):
-    df_airports = pd.read_csv('airports.csv')
+    df_airports = pd.read_csv('testeManus/airports.csv')
     df_airports = df_airports[df_airports['ident'].notnull()]
     df_airports['ident'] = df_airports['ident'].str.strip().str.upper()
 

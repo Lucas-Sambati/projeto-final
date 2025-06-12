@@ -3,18 +3,25 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
+import plotly.express as px
+import plotly.graph_objects as go
 
 @st.cache_data
 def heatmap_geral():
     df = execute_query("SELECT idade, duracao_sono, qualidade_sono, atividade_fisica, nivel_estresse, taxa_batimentos, passos_diarios FROM pessoas;", return_df=True)
-    corr = df.corr()
-    _, col, _ = st.columns([0.25, 0.5, 0.25], vertical_alignment="center")
-    with col:
-        st.write("### Correlação entre as colunas")
-        fig, ax = plt.subplots(figsize=(7, 7))
-        sns.heatmap(corr, ax=ax, annot=True, cmap="Greens", fmt=".2f", linewidths=5)
-        plt.tight_layout()
-        st.pyplot(fig)
+    
+    st.subheader("MATRIZ DE CORRELAÇÕES")
+    numeric_cols = ['idade', 'duracao_sono', 'qualidade_sono', 'atividade_fisica', 
+                   'nivel_estresse', 'taxa_batimentos', 'passos_diarios']
+    corr_matrix = df[numeric_cols].corr()
+    
+    fig_corr = px.imshow(
+        corr_matrix,
+        text_auto=True,
+        aspect="auto",
+        color_continuous_scale='RdBu_r'
+    )
+    st.plotly_chart(fig_corr, use_container_width=True)
 
 @st.cache_data
 def profissao_mais_estressante():

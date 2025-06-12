@@ -4,28 +4,31 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 from io import BytesIO
+import plotly.express as px
+import plotly.graph_objects as go
 
 @st.cache_data
 def grafico_distribuicao_numerica(coluna_numerica):
     df = execute_query(f"SELECT {coluna_numerica} FROM pessoas;", return_df=True)
+    
+    df["idade_agrupada"] = (df[coluna_numerica] // 5) * 5
+    frequencias = df["idade_agrupada"].value_counts().sort_index()
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    sns.histplot(data=df, x=coluna_numerica, kde=True, ax=ax,
-                 color="#4CAF50",
-                 edgecolor="black", bins=15)
-
-    ax.set_title(f'Distribuição de {coluna_numerica.replace("_", " ").title()}', fontsize=16) 
-    ax.set_xlabel(f'{coluna_numerica.replace("_", " ").title()}', fontsize=12)
-    ax.set_ylabel('Frequência', fontsize=12)
-    ax.grid(axis='y', linestyle='--', alpha=0.7)
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
-
-    st.image(buf, width=1000)  
-
-    plt.close(fig)
+    hist_df = pd.DataFrame({
+        "Idade": frequencias.index,
+        "Frequencia": frequencias.values
+    })
+        
+    fig = px.bar(
+            hist_df,
+            x='Idade',
+            y='Frequencia',
+            orientation='v',
+            title="Top 10 Empresas por Passageiros",
+            labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
+            height=600
+        )
+    st.plotly_chart(fig, use_container_width=True)
 
 def grafico_frequencia_categorica(coluna_categorica):
     df = execute_query(f"SELECT {coluna_categorica} FROM pessoas;", return_df=True)

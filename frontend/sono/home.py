@@ -26,7 +26,9 @@ with st.container(border=False):
     with col6:
         st.metric("QUALIDADE MÉDIA DO SONO", media_nivel_estresse())
 
-with st.container(border=True):
+with st.container():
+    st.write('')
+    st.write('')
     heatmap_geral()    
 
 with st.expander("Mostrar Tabela"):
