@@ -2,7 +2,7 @@
 
 ## Descrição do Projeto
 
-Este projeto foi desenvolvido como trabalho final para uma disciplina de Design de Software. Ele implementa um sistema para gerenciar e enviar convites personalizados, demonstrando conceitos de design de software e boas práticas de programação.
+Este projeto foi desenvolvido como trabalho final para a matéria de Analytics da instituição SENAI. Ele implementa um sistema para fazer analíses de duas diferentes fontes de dados, demonstrando conhecimentos de analise de dados e programção em python e suas bibliotecas.
 
 ## Estrutura do Projeto
 
@@ -59,7 +59,7 @@ Para configurar e executar o projeto localmente, siga os passos abaixo:
 *   **Python**: Linguagem de programação principal.
 *   **Streamlit**: Framework para criação de aplicações web interativas.
 *   **CSS**: Para estilização da interface do usuário.
-*   **SQL**: Para gerenciamento de dados (presumido, com base na estrutura `db/`).
+*   **SQL**: Para gerenciamento de dados.
 
 ## Diretrizes de Contribuição
 
