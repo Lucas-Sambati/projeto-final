@@ -31,7 +31,7 @@ def heatmap_stress_sono():
         color_continuous_scale='Blues'
     )
     st.plotly_chart(fig_corr, use_container_width=True)
-
+    
 @st.cache_data
 def heatmap_obesidade_batimentos_sono():
     df = execute_query("SELECT nivel_IMC, taxa_batimentos, qualidade_sono FROM pessoas;", return_df=True)

@@ -22,14 +22,10 @@ st.header("2. Análise Comparativa por Profissão")
 col1, col2 = st.columns(2)
 
 with col1:
-    with st.container(border=True, height=530):
-        st.subheader("Frequência de Distúrbios do Sono")
-        show_sleep_disorder_frequency_chart()
+    show_sleep_disorder_frequency_chart()
 
 with col2:
-    with st.container(border=True, height=530):
-        st.subheader("Estresse vs. Batimentos Cardíacos")
-        show_stress_level_heart_rate_chart()
+    show_stress_level_heart_rate_chart()
 
 st.divider()
 

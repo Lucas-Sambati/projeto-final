@@ -26,6 +26,7 @@ def grafico_distribuicao_numerica(coluna_numerica):
             orientation='v',
             title="Top 10 Empresas por Passageiros",
             labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
             height=600
         )
     st.plotly_chart(fig, use_container_width=True)
@@ -36,25 +37,19 @@ def grafico_frequencia_categorica(coluna_categorica):
     contagem = df[coluna_categorica].value_counts().reset_index()
     contagem.columns = [coluna_categorica, 'Frequência']
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    sns.barplot(x='Frequência', y=coluna_categorica, data=contagem, ax=ax,
-                palette="pastel", 
-                orient='h')
-
-    ax.set_title(f'Frequência por {coluna_categorica.replace("_", " ").title()}', fontsize=16)
-    ax.set_xlabel('Número de Pessoas', fontsize=12)
-    ax.set_ylabel(f'{coluna_categorica.replace("_", " ").title()}', fontsize=12)
-    ax.tick_params(axis='y', labelsize=10) 
-    ax.invert_yaxis() 
-
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
-
-    st.image(buf, width=1000)  
-
-    plt.close(fig)
+    fig = px.bar(
+            contagem,
+            x='Frequência',
+            y=coluna_categorica,
+            orientation='h',
+            color=coluna_categorica,
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            title="Top 10 Empresas por Passageiros",
+            labels={'total_passengers': 'Total de Passageiros', 'empresa_nome': 'Empresa'},
+            height=600
+        )
+    st.plotly_chart(fig, use_container_width=True)
+    
 
 def tabela_filtragens():
     df = execute_query("SELECT idade, genero, profissao, nivel_IMC, condicao_sono, nivel_estresse FROM pessoas;", return_df=True)

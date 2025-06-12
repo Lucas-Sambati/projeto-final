@@ -4,6 +4,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 from io import BytesIO
+import plotly.express as px
+import plotly.graph_objects as go
+from sklearn.preprocessing import MinMaxScaler
 
 query = """
 SELECT profissao, condicao_sono, taxa_batimentos, nivel_estresse, genero
@@ -14,16 +17,26 @@ df = execute_query(query, return_df=True)
 @st.cache_data
 def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
-    fig, ax = plt.subplots(figsize=(10,6))
-    sns.countplot(df, y="profissao", ax=ax, hue="profissao", palette="pastel")
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
+    contagem = df['profissao'].value_counts().reset_index()
+    contagem.columns = ['profissao', 'Frequência']
 
-    st.image(buf, width=1000)  
+    fig = px.bar(
+        contagem,
+        x='Frequência',
+        y='profissao',
+        orientation='h',
+        color='profissao',
+        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        title='Contagem de Profissões',
+        labels={
+            'Frequência': 'Número de Pessoas',
+            'profissao': 'Profissão'
+        },
+        height=600
+    )
 
-    plt.close(fig) 
-
+    st.plotly_chart(fig, use_container_width=True)
+    
 @st.cache_data
 def show_sleep_disorder_frequency_chart():
 # HEATMAP
@@ -32,117 +45,116 @@ def show_sleep_disorder_frequency_chart():
         df['condicao_sono'],
         normalize='index'
     )
-
-    fig, ax = plt.subplots(figsize=(10,6)) 
-    sns.heatmap(
-        sleep_crosstab, 
-        annot=True, 
-        cmap='Pastel1', 
-        fmt='.0%',
-        linewidths=.5,
-        ax=ax
+    
+    fig_corr = px.imshow(
+        sleep_crosstab,
+        text_auto=True,
+        aspect="auto",
+        title="Correlação entre Variáveis Sono e Profissão",
+        color_continuous_scale='Blues'
     )
-    plt.title('Frequência de Distúrbios do Sono por Profissão')
-    plt.ylabel('Profissão')
-    plt.xlabel('Distúrbio do Sono')
-    plt.tight_layout()
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
-
-    st.image(buf, width=1000)  
-
-    plt.close(fig)
+    st.plotly_chart(fig_corr, use_container_width=True)
 
 @st.cache_data
 def show_stress_level_heart_rate_chart():
-    # GRAFICO DE BARRAS/LINHA ESTRESSE E BATIMENTOS POR PROFISSAO
     agg_df = df.groupby('profissao').agg(
         avg_heart_rate=('taxa_batimentos', 'mean'),
         avg_stress=('nivel_estresse', 'mean')
     ).reset_index().sort_values(by='avg_heart_rate', ascending=False)
 
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    scaler = MinMaxScaler()
+    agg_df['stress_normalized'] = scaler.fit_transform(agg_df[['avg_stress']])
+    colors = px.colors.diverging.RdBu_r
+    color_scale = [colors[int(val * (len(colors)-1))] for val in agg_df['stress_normalized']]
 
-    sns.barplot(
-        data=agg_df,
-        x='avg_heart_rate',
-        y='profissao',
-        ax=ax1,
-        hue='profissao',
-        palette="pastel",
-        legend=False 
+    bar = go.Bar(
+        x=agg_df['avg_heart_rate'],
+        y=agg_df['profissao'],
+        orientation='h',
+        name='Média de Batimentos Cardíacos',
+        marker=dict(color=color_scale),
     )
-    ax1.set_xlabel('Média de Batimentos Cardíacos', color='royalblue', fontsize=12)
-    ax1.set_ylabel('Profissão', fontsize=12)
-    ax1.tick_params(axis='x', labelcolor='royalblue')
 
-    ax2 = ax1.twiny()
-    sns.lineplot(
-        data=agg_df,
-        x='avg_stress',
-        y='profissao',
-        color='crimson',
-        marker='o',
-        linewidth=2.5,
-        ax=ax2,
-        label='Nível de Estresse'
+    line = go.Scatter(
+        x=agg_df['avg_stress'],
+        y=agg_df['profissao'],
+        mode='lines+markers',
+        name='Nível Médio de Estresse',
+        marker=dict(color='crimson'),
+        line=dict(width=3),
+        xaxis='x2'
     )
-    ax2.set_xlabel('Nível Médio de Estresse', color='crimson', fontsize=12)
-    ax2.tick_params(axis='x', labelcolor='crimson')
-    
-    ax1.grid(False)
-    ax2.grid(False)
 
-    plt.title('Batimentos Cardíacos e Estresse por Profissão', pad=20, fontsize=16)
-    fig.tight_layout()
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
+    max_hr = agg_df['avg_heart_rate'].max()
+    range_max = ((max_hr // 10) + 1) * 10
 
-    st.image(buf, width=1000)  
+    layout = go.Layout(
+        title='Batimentos Cardíacos e Estresse por Profissão',
+        xaxis=dict(
+            title=dict(text='Média de Batimentos Cardíacos', font=dict(color='royalblue')),
+            tickfont=dict(color='royalblue'),
+            tickmode='linear',
+            tick0=0,
+            dtick=10,
+            range=[0, range_max]
+        ),
+        xaxis2=dict(
+            tickfont=dict(color='crimson'),
+            overlaying='x',
+            side='top'
+        ),
+        yaxis=dict(
+            title=dict(text='Profissão'),
+            automargin=True
+        ),
+        height=600,
+        template='simple_white'
+    )
 
-    plt.close(fig)
+    fig = go.Figure(data=[bar, line], layout=layout)
+    fig.update_yaxes(autorange='reversed')
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
 
 def show_health_risk_per_occupation():
-# GRAFICO SCATTER
     risk_df = df.groupby('profissao').agg(
         sleep_apnea_prevalence=('condicao_sono', lambda x: (x == 'Sleep Apnea').mean()),
         avg_heart_rate=('taxa_batimentos', 'mean'),
         avg_stress=('nivel_estresse', 'mean')
     ).reset_index()
 
-    fig = plt.figure(figsize=(10, 6))
-    scatter = sns.scatterplot(
-        data=risk_df,
+    # Cria o scatter plot
+    fig = px.scatter(
+        risk_df,
         x='sleep_apnea_prevalence',
         y='avg_heart_rate',
         size='avg_stress',
-        sizes=(50, 500),
-        hue='profissao',
-        palette='pastel',
-        alpha=0.8
+        color='profissao',
+        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        size_max=50,
+        opacity=0.8,
+        labels={
+            'sleep_apnea_prevalence': 'Prevalência de Apneia do Sono',
+            'avg_heart_rate': 'Média de Batimentos Cardíacos',
+            'avg_stress': 'Nível Médio de Estresse',
+            'profissao': 'Profissão'
+        },
+        title='Risco de Saúde por Ocupação'
     )
 
-    highlight = risk_df[risk_df['sleep_apnea_prevalence'] > 0.3]
-    for i, row in highlight.iterrows():
-        plt.annotate(
-            row['profissao'], 
-            (row['sleep_apnea_prevalence'], row['avg_heart_rate']),
-            xytext=(10, -10),
-            textcoords='offset points',
-            fontsize=10,
-            color='red'
+    # Adiciona anotações para pontos com prevalência > 0.3
+    for i, row in risk_df[risk_df['sleep_apnea_prevalence'] > 0.3].iterrows():
+        fig.add_annotation(
+            x=row['sleep_apnea_prevalence'],
+            y=row['avg_heart_rate'],
+            text=row['profissao'],
+            showarrow=True,
+            arrowhead=2,
+            ax=20,
+            ay=-20,
+            font=dict(color='red', size=12)
         )
 
-    plt.xlabel('Prevalência de Apneia do Sono')
-    plt.ylabel('Média de Batimentos Cardíacos')
-    plt.grid(True, alpha=0.2)
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    buf = BytesIO()
-    fig.savefig(buf, format="png", dpi=100, bbox_inches='tight')
-    buf.seek(0)
-
-    st.image(buf, use_container_width=True)  
-
-    plt.close(fig)
+    st.plotly_chart(fig, use_container_width=True)
