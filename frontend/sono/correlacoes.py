@@ -67,12 +67,3 @@ Pessoas com IMC elevado podem se beneficiar de monitoramento cardíaco e interve
     with col2:
         heatmap_obesidade_batimentos_sono()
 
-st.write("## Conclusões gerais")
-st.divider()
-st.subheader("""Fatores de estilo de vida (exercício, estresse, peso) têm impacto significativo na qualidade do sono
-
-Qualidade do sono parece ser mais sensível a esses fatores do que a duração do sono
-
-Abordagem holística é necessária para melhorar a saúde do sono, considerando atividade física, gestão de estresse e controle de peso
-
-Intervenções personalizadas podem ser desenvolvidas com base nessas correlações para diferentes perfis de pacientes""")
