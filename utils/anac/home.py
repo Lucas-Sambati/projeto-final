@@ -14,23 +14,32 @@ def empresa_com_mais_voos():
     
     return df_empresas_com_mais_voo.iloc[0, 0]
 
+def format_number(num):
+    if num >= 1_000_000:
+        return f"{num / 1_000_000:.1f}M"
+    elif num >= 1_000:
+        return f"{num / 1_000:.0f}K"
+    else:
+        return str(num)
+
 @st.cache_data
 def total_voos():
     df = execute_query("SELECT decolagens FROM viagens", return_df=True)
-    
-    return int(df['decolagens'].sum())
+    total = int(df['decolagens'].sum())
+    return format_number(total)
 
 @st.cache_data
 def total_passageiros():
     df = execute_query("SELECT passageiros_pagos FROM viagens", return_df=True)
-    
-    return int(df['passageiros_pagos'].sum())
+    total = int(df['passageiros_pagos'].sum())
+    return format_number(total)
 
 @st.cache_data
 def total_distancia_voada():
     df = execute_query("SELECT SUM(distancia_voada_km) AS total FROM viagens", return_df=True)
-    total = df.iloc[0]['total']
-    return f'{int(total)}km'
+    total = int(df.iloc[0]['total'])
+    return f"{format_number(total)} km"
+
 
 @st.cache_data
 def load_route_data():

@@ -22,10 +22,10 @@ with st.container():
         st.metric("RISCO CARDIOVASCULAR", f'{pessoas_com_risco_cardiovascular()}%')
 
     with col5:
-        st.metric("QUALDIADE MÉDIA DO SONO", media_qualidade_sono())
+        st.metric("QUALIDADE MÉDIA DO SONO", media_qualidade_sono())
 
     with col6:
-        st.metric("QUALIDADE MÉDIA DO SONO", media_nivel_estresse())
+        st.metric("NÍVEL MÉDIO DE ESTRESSE", media_nivel_estresse())
 
 with st.container():
     st.write('')

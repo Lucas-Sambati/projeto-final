@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.anac.analise_primaria import grafico_donut_passageiros, tabela_resumo, evolucao_passageiros_mensal, distribuicao_natureza, analise_eficiencia, atk_rtk, grafico_horas_passageiros
+from utils.anac.analise_primaria import *
 from db.anac.banco import execute_query
 
 df = execute_query("SELECT * FROM viagens", return_df=True)
@@ -8,44 +8,60 @@ st.title("✈️ Análise de Dados de Voos ANAC")
 # Sidebar filters
 st.sidebar.subheader("Filtros")
 
-# Year filter
-years = st.sidebar.multiselect(
-    "Ano:",
-    options=sorted(df['ano'].unique()),
-    default=sorted(df['ano'].unique())
-)
+# 1) Carrega os defaults a partir do DataFrame
+default_months = sorted(df['mes'].unique().tolist())
+default_nationalities = df['empresa_nacionalidade'].unique().tolist()
+default_natures = df['natureza'].unique().tolist()
 
-# Month filter
+# 2) Inicializa session_state caso ainda não exista
+for key, default in {
+    'months': default_months,
+    'nationalities': default_nationalities,
+    'natures': default_natures
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+# 3) Função de reset, que roda ANTES de recriar os widgets
+def reset_filters():
+    st.session_state.months = default_months
+    st.session_state.nationalities = default_nationalities
+    st.session_state.natures = default_natures
+
+# 5) Agora os multiselects leem de session_state e você evita reatribuições pós-instanciação
 months = st.sidebar.multiselect(
     "Mês:",
-    options=sorted(df['mes'].unique()),
-    default=sorted(df['mes'].unique())
+    options=default_months,
+    default=st.session_state.months,
+    key='months'
 )
 
-# Company nationality filter
 nationalities = st.sidebar.multiselect(
     "Nacionalidade da Empresa:",
-    options=df['empresa_nacionalidade'].unique(),
-    default=df['empresa_nacionalidade'].unique()
+    options=default_nationalities,
+    default=st.session_state.nationalities,
+    key='nationalities'
 )
 
-# Flight nature filter
 natures = st.sidebar.multiselect(
     "Natureza do Voo:",
-    options=df['natureza'].unique(),
-    default=df['natureza'].unique()
+    options=default_natures,
+    default=st.session_state.natures,
+    key='natures'
 )
 
-# Apply filters
+st.sidebar.button("Resetar Filtros", on_click=reset_filters)
+
+# 6) Aplica o filtro
 filtered_df = df[
-    (df['ano'].isin(years)) &
-    (df['mes'].isin(months)) &
-    (df['empresa_nacionalidade'].isin(nationalities)) &
-    (df['natureza'].isin(natures))
+    df['mes'].isin(months) &
+    df['empresa_nacionalidade'].isin(nationalities) &
+    df['natureza'].isin(natures)
 ]
 
 col1, col2 = st.columns(2, vertical_alignment="center")
 col3, col4 = st.columns(2, vertical_alignment="center")
+col5, col6 = st.columns(2, vertical_alignment="center")
 
 # LINHA 1
 with st.container(border=True):
@@ -56,11 +72,16 @@ with st.container(border=True):
 
 with st.container(border=True):
     with col3:
-        grafico_horas_passageiros()
+        atk_rtk(filtered_df)
     with col4:
-        grafico_donut_passageiros()
+        grafico_donut_passageiros(filtered_df)
 
-atk_rtk()
+with st.container(border=True):
+    with col5:
+        grafico_aeroportos_decolagens(filtered_df)
+    with col6:
+        ask_rpk(filtered_df)
+        
 analise_eficiencia(filtered_df)
 
 with st.expander("Mostrar Resumo"):

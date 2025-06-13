@@ -12,6 +12,7 @@ def distribuicao_natureza(filtered_df):
     fig2 = px.pie(
         values=nature_counts.values,
         names=nature_counts.index,
+        color_discrete_sequence=px.colors.diverging.RdBu_r,
         title="Distribuição por Natureza do Voo"
     )
     st.plotly_chart(fig2, use_container_width=True)
@@ -36,6 +37,7 @@ def analise_eficiencia(filtered_df):
             color='empresa_nacionalidade',
             size='passageiros_pagos',
             title="Consumo de Combustível vs Distância Voada",
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
             hover_data=['empresa_nome', 'fuel_efficiency'],
             labels={
                 'distancia_voada_km': 'Distância Voada (km)',
@@ -56,19 +58,26 @@ def evolucao_passageiros_mensal(filtered_df):
             monthly_passengers,
             x='date',
             y='total_passengers',
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
             title="Evolução Mensal de Passageiros",
             markers=True
         )
     st.plotly_chart(fig1, use_container_width=True)
 
-def grafico_donut_passageiros():
-    df = execute_query("SELECT sigla_empresa, SUM(passageiros_pagos) AS total_passageiros FROM viagens GROUP BY sigla_empresa ORDER BY total_passageiros DESC", return_df=True)
-    df['participacao_mercado'] = df['total_passageiros'] / df['total_passageiros'].sum()
+def grafico_donut_passageiros(df):
+    df_agg = (
+        df.groupby('sigla_empresa', as_index=False)['passageiros_pagos']
+        .sum()
+        .rename(columns={'passageiros_pagos': 'total_passageiros'})
+        .sort_values(by='total_passageiros', ascending=False)
+    )
 
-    top_empresas = df.nlargest(4, 'participacao_mercado')
+    df_agg['participacao_mercado'] = df_agg['total_passageiros'] / df_agg['total_passageiros'].sum()
+
+    top_empresas = df_agg.nlargest(4, 'participacao_mercado')
     outros = pd.DataFrame({
         'sigla_empresa': ['Outros'],
-        'total_passageiros': [df['total_passageiros'].sum() - top_empresas['total_passageiros'].sum()],
+        'total_passageiros': [df_agg['total_passageiros'].sum() - top_empresas['total_passageiros'].sum()],
         'participacao_mercado': [1 - top_empresas['participacao_mercado'].sum()]
     })
 
@@ -94,17 +103,18 @@ def tabela_resumo(filtered_df):
     st.dataframe(filtered_df, use_container_width=True)
 
 @st.cache_data
-def grafico_horas_passageiros():
-    df = execute_query("SELECT horas_voadas, passageiros_pagos FROM viagens WHERE horas_voadas and passageiros_pagos IS NOT NULL", return_df=True)
-    df['horas_voadas'] = df['horas_voadas'].str.replace(',', '.').astype(float)
+def grafico_horas_passageiros(df):
+    df_filtrado = df[df['horas_voadas'].notnull() & df['passageiros_pagos'].notnull()][['horas_voadas', 'passageiros_pagos']]
+    df_filtrado['horas_voadas'] = df_filtrado['horas_voadas'].str.replace(',', '.').astype(float)
 
-    df_agg = df.groupby('horas_voadas', as_index=False)['passageiros_pagos'].mean().sort_values('horas_voadas')
+    df_agg = df_filtrado.groupby('horas_voadas', as_index=False)['passageiros_pagos'].mean().sort_values('horas_voadas')
 
     fig = px.line(
         df_agg,
         x='horas_voadas',
         y='passageiros_pagos',
         title='Variação Mensal de Horas Voadas vs Passageiros',
+        color_discrete_sequence=px.colors.diverging.RdBu_r,
         labels={
             'horas_voadas': 'Horas Voadas',
             'passageiros_pagos': 'Número de Passageiros'
@@ -114,46 +124,176 @@ def grafico_horas_passageiros():
     st.plotly_chart(fig, use_container_width=True)
 
 @st.cache_data
-def atk_rtk():    
-    df = execute_query(
-        "SELECT sigla_empresa, atk, rtk, decolagens FROM viagens "
-        "WHERE atk IS NOT NULL AND rtk IS NOT NULL AND decolagens IS NOT NULL",
-        return_df=True
-    )
+def atk_rtk(df):
+    df_filtered = df[
+        df['atk'].notnull() & 
+        df['rtk'].notnull() & 
+        df['decolagens'].notnull()
+    ].copy()
 
-    df = df[(df['atk']>5000000) & (df['rtk'] >5000000)]
-    df_sorted = df.sort_values('decolagens', ascending=False)
+    df_filtered = df_filtered[(df_filtered['atk'] > 5000000) & (df_filtered['rtk'] > 5000000)]
+    df_sorted = df_filtered.sort_values('decolagens', ascending=False)
     df_top = df_sorted.drop_duplicates(subset='sigla_empresa').head(10)
 
     labels = df_top['sigla_empresa']
     atk = df_top['atk']
     rtk = df_top['rtk']
 
-    x = np.arange(len(labels))  # posições no eixo X
-    width = 0.35  # largura das barras
+    # Paleta RdBu_r: vermelho e azul
+    colors = px.colors.diverging.RdBu_r
+    # Vamos usar um vermelho próximo de colors[0] e azul próximo de colors[-1]
+    color_atk = colors[0]    # tom vermelho
+    color_rtk = colors[-1]   # tom azul
 
-    fig, ax = plt.subplots(figsize=(12,7))
+    fig = go.Figure()
 
-    # Barras lado a lado
-    bar1 = ax.bar(x - width/2, atk, width, label='ATK', color='red')
-    bar2 = ax.bar(x + width/2, rtk, width, label='RTK', color='blue')
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=atk,
+        name='ATK',
+        marker_color=color_atk,
+    ))
 
-    # Configurações do eixo X
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=45, ha='right')
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=rtk,
+        name='RTK',
+        marker_color=color_rtk,
+    ))
 
-    # Títulos e legendas
-    ax.set_title('Top 10 Empresas com Mais RPK (Revenue Passenger Kilometers)', fontsize=16)
-    ax.set_xlabel('Empresa', fontsize=12)
-    ax.set_ylabel('ATK e RTK', fontsize=12)
-    ax.legend()
+    fig.update_layout(
+        barmode='group',
+        title='Fator de Utilização de Carga',
+        xaxis_title='Empresa',
+        yaxis_title='ATK e RTK',
+        xaxis_tickangle=-45,
+        template='simple_white',
+        width=900,
+        height=600,
+        legend=dict(title='Legenda')
+    )
+    
+    fig.update_layout(
+    annotations=[
+            dict(
+                x=0.02, y=0.97,
+                xref='paper', yref='paper',
+                text="<b></b><br>"
+                    f"<span style='color:{colors[0]}'>■</span> ATK - Capacidade total de transporte de carga disponível (passageiro e peso)<br>"
+                    f"<span style='color:{colors[-1]}'>■</span> RTK - Quanto da capacidade total (ATK) está sendo usado",
+                showarrow=False,
+                align='left',
+                font=dict(size=14),
+                bordercolor="black",
+                borderwidth=1,
+                borderpad=4,
+                bgcolor="white",
+                opacity=0.8
+            )
+        ]
+    )
 
-    sns.despine()
-    plt.tight_layout()
 
-    # Exibe no Streamlit
-    st.pyplot(fig)
-    st.write('''
-    Barra vermelha (ATK) Capacidade disponível total\n
-    Barra azul (RTK) Demanda efetiva
-    ''')
+    st.plotly_chart(fig, use_container_width=True)
+    
+@st.cache_data
+def grafico_aeroportos_decolagens(df):
+    df_agg = (
+        df.groupby(['aeroporto_origem_sigla', 'natureza'], as_index=False)['decolagens']
+        .sum()
+        .rename(columns={'decolagens': 'decolagens'})
+        .sort_values(by='decolagens', ascending=False)
+    )
+
+    total_decolagens = df_agg.groupby('aeroporto_origem_sigla')['decolagens'].sum().reset_index()
+    top_empresas = total_decolagens.nlargest(10, 'decolagens')['aeroporto_origem_sigla']
+    df_top = df_agg[df_agg['aeroporto_origem_sigla'].isin(top_empresas)]
+    
+    fig = px.bar(
+            df_top,
+            x='decolagens',
+            y='aeroporto_origem_sigla',
+            orientation='h',
+            title=f"Top 10 Aeroportos com Mais Decolagens",
+            color='natureza',
+            barmode='group',
+            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            height=600
+        )
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
+
+    
+@st.cache_data
+def ask_rpk(df):
+    df_filtered = df[
+        df['ask'].notnull() & 
+        df['rpk'].notnull() & 
+        df['decolagens'].notnull()
+    ].copy()
+
+    df_filtered = df_filtered[(df_filtered['ask'] > 5000000) & (df_filtered['rpk'] > 5000000)]
+    df_sorted = df_filtered.sort_values('decolagens', ascending=False)
+    df_top = df_sorted.drop_duplicates(subset='sigla_empresa').head(10)
+
+    labels = df_top['sigla_empresa']
+    ask = df_top['ask']
+    rpk = df_top['rpk']
+
+    # Paleta RdBu_r: vermelho e azul
+    colors = px.colors.diverging.RdBu_r
+    # Vamos usar um vermelho próximo de colors[0] e azul próximo de colors[-1]
+    color_ask = colors[0]    # tom vermelho
+    color_rpk = colors[-1]   # tom azul
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=ask,
+        name='APK',
+        marker_color=color_ask,
+    ))
+
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=rpk,
+        name='RPK',
+        marker_color=color_rpk,
+    ))
+
+    fig.update_layout(
+        barmode='group',
+        title='Fator de Utilização de Carga',
+        xaxis_title='Empresa',
+        yaxis_title='APK e RPK',
+        xaxis_tickangle=-45,
+        template='simple_white',
+        width=900,
+        height=600,
+        legend=dict(title='Legenda')
+    )
+    
+    fig.update_layout(
+    annotations=[
+            dict(
+                x=0.02, y=0.97,
+                xref='paper', yref='paper',
+                text="<b></b><br>"
+                    f"<span style='color:{colors[0]}'>■</span> APK - Capacidade total de assentos disponíveis por Km<br>"
+                    f"<span style='color:{colors[-1]}'>■</span> RPK - Quanto da capacidade total (APK) está sendo usado",
+                showarrow=False,
+                align='left',
+                font=dict(size=14),
+                bordercolor="black",
+                borderwidth=1,
+                borderpad=4,
+                bgcolor="white",
+                opacity=0.8
+            )
+        ]
+    )
+
+
+    st.plotly_chart(fig, use_container_width=True)
+    
