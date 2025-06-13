@@ -14,7 +14,8 @@ def heatmap_exercicio_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Atividades Físicas",
-        color_continuous_scale='Blues'
+        color_continuous_scale='Blues',
+        height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)
 
@@ -28,7 +29,8 @@ def heatmap_stress_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Estresse",
-        color_continuous_scale='Blues'
+        color_continuous_scale='Blues',
+        height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)
     
@@ -49,6 +51,7 @@ def heatmap_obesidade_batimentos_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Saúde",
-        color_continuous_scale='Blues'
+        color_continuous_scale='Blues',
+        height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)

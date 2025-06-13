@@ -6,21 +6,22 @@ st.divider()
 with st.container(border=True):
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("""Dados analisados: Duração do sono, qualidade do sono, atividade física e passos diários.
+        st.subheader("Dados analisados: Duração e Qualidade do Sono, Atividade Física e Passos Diários")
+        
+        st.markdown("""
+        **Principais observações:**
 
-***Principais observações***:
+        - **Correlação positiva:** Atividade física e passos diários mostram uma correlação positiva com a *qualidade* do sono. Pessoas mais ativas tendem a ter um sono de melhor qualidade.
+        - **Correlação moderada:** A *duração* do sono tem uma correlação moderada com a qualidade, indicando que mais tempo dormindo não significa, necessariamente, um sono melhor.
+        - **Correlação negativa:** Há uma possível correlação negativa entre atividade física intensa (passos diários) e a *duração* do sono, sugerindo que exercício em excesso pode impactar o tempo de sono.
+        """)
+        
+        st.subheader("💡 Implicações Práticas")
 
-Provavelmente mostra uma correlação positiva entre atividade física/passos diários e qualidade do sono, indicando que pessoas mais ativas tendem a ter melhor qualidade de sono.
+        st.success("**Recomendação:** Praticar atividade física moderada para melhorar a qualidade do sono.")
+        
+        st.warning("**Alerta:** Exercícios excessivos podem ter efeitos negativos na duração total do sono.")
 
-A duração do sono pode mostrar uma correlação moderada com a qualidade do sono, já que quantidade e qualidade nem sempre andam juntas.
-
-Possivelmente há uma correlação negativa entre atividade física intensa (muitos passos) e duração do sono, sugerindo que exercício excessivo pode reduzir horas de sono.
-
-***Implicações práticas***:
-
-Recomendar atividade física moderada para melhorar a qualidade do sono
-
-Alertar sobre possíveis efeitos negativos de exercícios excessivos na duração do sono""")
     with col2:
         heatmap_exercicio_sono()
 
@@ -29,40 +30,37 @@ with st.container(border=True):
     with col1:
         heatmap_stress_sono()
     with col2:
-        st.subheader("""Dados analisados: Duração do sono, qualidade do sono e nível de estresse.
+        st.subheader("Dados analisados: Nível de Estresse e Qualidade do Sono")
+        
+        st.markdown("""
+        **Principais observações:**
+        - **Forte correlação negativa:** Quanto maior o nível de estresse, pior a qualidade do sono.
+        - **Correlação moderada:** O estresse também pode impactar negativamente a duração do sono, mas com menor intensidade.
+        - **Impacto principal:** A qualidade do sono parece ser a variável mais afetada pelo estresse.
+        """)
 
-***Principais observações***:
+        st.subheader("💡 Implicações Práticas")
+        
+        st.success("**Foco na Causa:** Estratégias de redução de estresse são cruciais para melhorar a qualidade do sono.")
+        st.info("**Sugestão de Intervenção:** Técnicas de relaxamento, como *mindfulness* e meditação, podem ser particularmente eficazes.")
 
-Forte correlação negativa entre nível de estresse e qualidade do sono (quanto mais estresse, pior o sono)
-
-Possível correlação negativa moderada entre estresse e duração do sono
-
-A qualidade do sono parece ser mais afetada pelo estresse do que a duração
-
-***Implicações práticas***:
-
-Estratégias de redução de estresse são cruciais para melhorar a qualidade do sono
-
-Intervenções como mindfulness e técnicas de relaxamento podem ser particularmente eficazes""")
 
 with st.container(border=True):
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("""Dados analisados: Nível de IMC (convertido para escala numérica), taxa de batimentos cardíacos e qualidade do sono.
+        st.subheader("Dados analisados: IMC, Batimentos Cardíacos e Qualidade do Sono")
 
-***Principais observações***:
+        st.markdown("""
+        **Principais observações:**
+        - **Correlação positiva:** IMC elevado tende a se correlacionar com uma frequência cardíaca mais alta.
+        - **Correlação negativa:** Um IMC mais alto está associado a uma pior qualidade do sono.
+        - **Possível efeito cascata:** A frequência cardíaca elevada também pode se correlacionar negativamente com a qualidade do sono.
+        """)
 
-Correlação positiva entre IMC elevado e taxa de batimentos (pessoas com sobrepeso tendem a ter frequência cardíaca mais alta)
+        st.subheader("💡 Implicações Práticas")
 
-Correlação negativa entre IMC elevado e qualidade do sono
-
-Possível correlação negativa entre taxa de batimentos e qualidade do sono
-
-***Implicações práticas***:
-
-Controle de peso é importante não só para saúde cardiovascular mas também para qualidade do sono
-
-Pessoas com IMC elevado podem se beneficiar de monitoramento cardíaco e intervenções para melhorar o sono""")
+        st.success("**Saúde Integral:** O controle de peso é importante não apenas para a saúde cardiovascular, mas também para a qualidade do sono.")
+        st.warning("**Atenção Específica:** Pessoas com IMC elevado podem se beneficiar de monitoramento cardíaco e intervenções focadas na melhoria do sono.")
 
     with col2:
         heatmap_obesidade_batimentos_sono()
