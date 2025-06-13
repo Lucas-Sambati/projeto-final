@@ -176,7 +176,7 @@ def atk_rtk(df):
     fig.update_layout(
     annotations=[
             dict(
-                x=0.02, y=0.97,
+                x=0.02, y=1.08,
                 xref='paper', yref='paper',
                 text="<b></b><br>"
                     f"<span style='color:{colors[0]}'>■</span> ATK - Capacidade total de transporte de carga disponível (passageiro e peso)<br>"
@@ -277,7 +277,7 @@ def ask_rpk(df):
     fig.update_layout(
     annotations=[
             dict(
-                x=0.02, y=0.97,
+                x=0.02, y=1.08,
                 xref='paper', yref='paper',
                 text="<b></b><br>"
                     f"<span style='color:{colors[0]}'>■</span> APK - Capacidade total de assentos disponíveis por Km<br>"
