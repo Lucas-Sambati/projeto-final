@@ -5,6 +5,8 @@ from db.anac.banco import execute_query
 df = execute_query("SELECT * FROM viagens", return_df=True)
 st.title("✈️ Análise de Dados de Voos ANAC")
 
+st.divider()
+
 # Sidebar filters
 st.sidebar.subheader("Filtros")
 

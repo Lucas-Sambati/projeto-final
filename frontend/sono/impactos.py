@@ -11,6 +11,7 @@ st.markdown("""
 Este dashboard analisa como diferentes profissões se relacionam com a qualidade do sono, níveis de estresse e saúde cardíaca.
 """)
 
+st.divider()
 
 st.header("1. Distribuição de Profissionais na Amostra")
 with st.container():
