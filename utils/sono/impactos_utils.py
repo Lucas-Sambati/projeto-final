@@ -7,6 +7,8 @@ from io import BytesIO
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
+from utils.color import get_color
+from utils.color import get_color_correlacoes_sono
 
 query = """
 SELECT profissao, condicao_sono, taxa_batimentos, nivel_estresse, genero
@@ -14,7 +16,6 @@ FROM pessoas
 """  
 df = execute_query(query, return_df=True)
 
-@st.cache_data
 def show_occupation_count_chart():
 # CONTAGEM DE PROFISSIONAIS
     contagem = df['profissao'].value_counts().reset_index()
@@ -26,7 +27,7 @@ def show_occupation_count_chart():
         y='profissao',
         orientation='h',
         color='profissao',
-        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        color_discrete_sequence=get_color(),
         title='Contagem de Profissões',
         labels={
             'Frequência': 'Número de Pessoas',
@@ -37,7 +38,6 @@ def show_occupation_count_chart():
 
     st.plotly_chart(fig, use_container_width=True)
     
-@st.cache_data
 def show_sleep_disorder_frequency_chart():
 # HEATMAP
     sleep_crosstab = pd.crosstab(
@@ -51,11 +51,10 @@ def show_sleep_disorder_frequency_chart():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Profissão",
-        color_continuous_scale='Blues'
+        color_continuous_scale=get_color_correlacoes_sono()
     )
     st.plotly_chart(fig_corr, use_container_width=True)
 
-@st.cache_data
 def show_stress_level_heart_rate_chart():
     agg_df = df.groupby('profissao').agg(
         avg_heart_rate=('taxa_batimentos', 'mean'),
@@ -64,7 +63,7 @@ def show_stress_level_heart_rate_chart():
 
     scaler = MinMaxScaler()
     agg_df['stress_normalized'] = scaler.fit_transform(agg_df[['avg_stress']])
-    colors = px.colors.diverging.RdBu_r
+    colors = get_color()
     color_scale = [colors[int(val * (len(colors)-1))] for val in agg_df['stress_normalized']]
 
     bar = go.Bar(
@@ -115,8 +114,6 @@ def show_stress_level_heart_rate_chart():
 
     st.plotly_chart(fig, use_container_width=True)
 
-
-
 def show_health_risk_per_occupation():
     risk_df = df.groupby('profissao').agg(
         sleep_apnea_prevalence=('condicao_sono', lambda x: (x == 'Sleep Apnea').mean()),
@@ -131,7 +128,7 @@ def show_health_risk_per_occupation():
         y='avg_heart_rate',
         size='avg_stress',
         color='profissao',
-        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        color_discrete_sequence=get_color(),
         size_max=50,
         opacity=0.8,
         labels={

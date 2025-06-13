@@ -1,7 +1,15 @@
 import streamlit as st
 from utils.sono.analise_perfil import tabela_filtragens, grafico_frequencia_categorica, grafico_distribuicao_numerica
 
-st.title("Análise Perfil")
+col1, col2 = st.columns([0.9, 0.12],vertical_alignment="bottom")
+
+with col1:
+    st.title('Análise Perfil')
+with col2:
+    with st.popover("Acessibilidade"):
+        modo = st.radio("Modo de Visualização", ["Padrão", "Modo daltônico"], key="acessibilidade_radio")
+        st.session_state["modo_daltonico"] = (modo == "Modo daltônico")
+
 st.divider()
 col, _ = st.columns([0.2, 0.8])
 with col:

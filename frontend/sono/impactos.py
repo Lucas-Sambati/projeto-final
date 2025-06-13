@@ -6,7 +6,15 @@ from utils.sono.impactos_utils import (
     show_stress_level_heart_rate_chart
 )
 
-st.title("Impacto da Profissão na Saúde do Sono")
+col1, col2 = st.columns([0.9, 0.12],vertical_alignment="bottom")
+
+with col1:
+    st.title('Impacto da Profissão na Saúde do Sono')
+with col2:
+    with st.popover("Acessibilidade"):
+        modo = st.radio("Modo de Visualização", ["Padrão", "Modo daltônico"], key="acessibilidade_radio")
+        st.session_state["modo_daltonico"] = (modo == "Modo daltônico")
+        
 st.markdown("""
 Este dashboard analisa como diferentes profissões se relacionam com a qualidade do sono, níveis de estresse e saúde cardíaca.
 """)

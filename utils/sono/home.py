@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
+from utils.color import get_color
 
 @st.cache_data
 def heatmap_geral():

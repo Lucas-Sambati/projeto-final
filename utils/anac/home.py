@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from db.anac.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
+from utils.color import get_color
 
 @st.cache_data
 def empresa_com_mais_voos():
@@ -113,7 +114,7 @@ def draw_filtered_map(origin_airport=None, destination_airport=None, origin_coun
 
     fig = go.Figure()
     empresas = df['sigla_empresa'].unique()
-    colors = px.colors.qualitative.Dark24
+    colors = get_color()
     color_map = {empresa: colors[i % len(colors)] for i, empresa in enumerate(empresas)}
 
     for empresa in empresas:

@@ -6,8 +6,8 @@ from db.sono.banco import execute_query
 from io import BytesIO
 import plotly.express as px
 import plotly.graph_objects as go
+from utils.color import get_color
 
-@st.cache_data
 def grafico_distribuicao_numerica(coluna_numerica):
     df = execute_query(f"SELECT {coluna_numerica} FROM pessoas;", return_df=True)
     
@@ -25,7 +25,7 @@ def grafico_distribuicao_numerica(coluna_numerica):
             y='Frequencia',
             orientation='v',
             title=f"Distribuição de Pessoas por {coluna_numerica}",
-            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            color_discrete_sequence= get_color() ,
             height=600
         )
     st.plotly_chart(fig, use_container_width=True)
@@ -42,7 +42,7 @@ def grafico_frequencia_categorica(coluna_categorica):
             y=coluna_categorica,
             orientation='h',
             color=coluna_categorica,
-            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            color_discrete_sequence=get_color(),
             title=f"Distribuição de Pessoas por {coluna_categorica}",
             height=600
         )

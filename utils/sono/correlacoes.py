@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from db.sono.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
+from utils.color import get_color_correlacoes_sono
 
-@st.cache_data
 def heatmap_exercicio_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, atividade_fisica, passos_diarios FROM pessoas;", return_df=True)
     corr = df.corr()
@@ -14,12 +14,11 @@ def heatmap_exercicio_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Atividades Físicas",
-        color_continuous_scale='Blues',
+        color_continuous_scale= get_color_correlacoes_sono(),
         height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)
 
-@st.cache_data
 def heatmap_stress_sono():
     df = execute_query("SELECT duracao_sono, qualidade_sono, nivel_estresse FROM pessoas;", return_df=True)
     corr = df.corr()
@@ -29,12 +28,11 @@ def heatmap_stress_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Estresse",
-        color_continuous_scale='Blues',
+        color_continuous_scale=get_color_correlacoes_sono(),
         height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)
     
-@st.cache_data
 def heatmap_obesidade_batimentos_sono():
     df = execute_query("SELECT nivel_IMC, taxa_batimentos, qualidade_sono FROM pessoas;", return_df=True)
     imc_mapping = {
@@ -51,7 +49,7 @@ def heatmap_obesidade_batimentos_sono():
         text_auto=True,
         aspect="auto",
         title="Correlação entre Variáveis Sono e Saúde",
-        color_continuous_scale='Blues',
+        color_continuous_scale=get_color_correlacoes_sono(),
         height=600
     )
     st.plotly_chart(fig_corr, use_container_width=True)

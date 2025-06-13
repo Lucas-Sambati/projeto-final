@@ -6,13 +6,14 @@ from db.anac.banco import execute_query
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+from utils.color import get_color
 
 def distribuicao_natureza(filtered_df):
     nature_counts = filtered_df['natureza'].value_counts()
     fig2 = px.pie(
         values=nature_counts.values,
         names=nature_counts.index,
-        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        color_discrete_sequence=get_color(),
         title="Distribuição por Natureza do Voo"
     )
     st.plotly_chart(fig2, use_container_width=True)
@@ -37,7 +38,7 @@ def analise_eficiencia(filtered_df):
             color='empresa_nacionalidade',
             size='passageiros_pagos',
             title="Consumo de Combustível vs Distância Voada",
-            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            color_discrete_sequence=get_color(),
             hover_data=['empresa_nome', 'fuel_efficiency'],
             labels={
                 'distancia_voada_km': 'Distância Voada (km)',
@@ -58,7 +59,7 @@ def evolucao_passageiros_mensal(filtered_df):
             monthly_passengers,
             x='date',
             y='total_passengers',
-            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            color_discrete_sequence=get_color(),
             title="Evolução Mensal de Passageiros",
             markers=True
         )
@@ -88,7 +89,7 @@ def grafico_donut_passageiros(df):
         names='sigla_empresa', 
         values='participacao_mercado', 
         hole=0.6,  
-        color_discrete_sequence = px.colors.diverging.RdBu_r,
+        color_discrete_sequence = get_color(),
     )
 
     fig.update_traces(textinfo='percent+label') 
@@ -102,7 +103,6 @@ def grafico_donut_passageiros(df):
 def tabela_resumo(filtered_df):
     st.dataframe(filtered_df, use_container_width=True)
 
-@st.cache_data
 def grafico_horas_passageiros(df):
     df_filtrado = df[df['horas_voadas'].notnull() & df['passageiros_pagos'].notnull()][['horas_voadas', 'passageiros_pagos']]
     df_filtrado['horas_voadas'] = df_filtrado['horas_voadas'].str.replace(',', '.').astype(float)
@@ -114,7 +114,7 @@ def grafico_horas_passageiros(df):
         x='horas_voadas',
         y='passageiros_pagos',
         title='Variação Mensal de Horas Voadas vs Passageiros',
-        color_discrete_sequence=px.colors.diverging.RdBu_r,
+        color_discrete_sequence=get_color(),
         labels={
             'horas_voadas': 'Horas Voadas',
             'passageiros_pagos': 'Número de Passageiros'
@@ -123,7 +123,6 @@ def grafico_horas_passageiros(df):
     
     st.plotly_chart(fig, use_container_width=True)
 
-@st.cache_data
 def atk_rtk(df):
     df_filtered = df[
         df['atk'].notnull() & 
@@ -140,7 +139,7 @@ def atk_rtk(df):
     rtk = df_top['rtk']
 
     # Paleta RdBu_r: vermelho e azul
-    colors = px.colors.diverging.RdBu_r
+    colors = get_color()
     # Vamos usar um vermelho próximo de colors[0] e azul próximo de colors[-1]
     color_atk = colors[0]    # tom vermelho
     color_rtk = colors[-1]   # tom azul
@@ -196,7 +195,6 @@ def atk_rtk(df):
 
     st.plotly_chart(fig, use_container_width=True)
     
-@st.cache_data
 def grafico_aeroportos_decolagens(df):
     df_agg = (
         df.groupby(['aeroporto_origem_sigla', 'natureza'], as_index=False)['decolagens']
@@ -217,14 +215,13 @@ def grafico_aeroportos_decolagens(df):
             title=f"Top 10 Aeroportos com Mais Decolagens",
             color='natureza',
             barmode='group',
-            color_discrete_sequence=px.colors.diverging.RdBu_r,
+            color_discrete_sequence=get_color(),
             height=600
         )
     fig.update_yaxes(autorange="reversed")
     st.plotly_chart(fig, use_container_width=True)
 
     
-@st.cache_data
 def ask_rpk(df):
     df_filtered = df[
         df['ask'].notnull() & 
@@ -241,7 +238,7 @@ def ask_rpk(df):
     rpk = df_top['rpk']
 
     # Paleta RdBu_r: vermelho e azul
-    colors = px.colors.diverging.RdBu_r
+    colors = get_color()
     # Vamos usar um vermelho próximo de colors[0] e azul próximo de colors[-1]
     color_ask = colors[0]    # tom vermelho
     color_rpk = colors[-1]   # tom azul

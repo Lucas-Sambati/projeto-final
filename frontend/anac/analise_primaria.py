@@ -3,7 +3,15 @@ from utils.anac.analise_primaria import *
 from db.anac.banco import execute_query
 
 df = execute_query("SELECT * FROM viagens", return_df=True)
-st.title("✈️ Análise de Dados de Voos ANAC")
+
+col1, col2 = st.columns([0.9, 0.12],vertical_alignment="bottom")
+
+with col1:
+    st.title('✈️ Análise de Dados de Voos ANAC')
+with col2:
+    with st.popover("Acessibilidade"):
+        modo = st.radio("Modo de Visualização", ["Padrão", "Modo daltônico"], key="acessibilidade_radio")
+        st.session_state["modo_daltonico"] = (modo == "Modo daltônico")
 
 st.divider()
 
