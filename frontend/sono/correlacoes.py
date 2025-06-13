@@ -11,10 +11,10 @@ with st.container(border=True):
         st.markdown("""
         **Principais observações:**
 
-        - **Correlação positiva:** Atividade física e passos diários mostram uma correlação positiva com a *qualidade* do sono. Pessoas mais ativas tendem a ter um sono de melhor qualidade.
-        - **Correlação moderada:** A *duração* do sono tem uma correlação moderada com a qualidade, indicando que mais tempo dormindo não significa, necessariamente, um sono melhor.
-        - **Correlação negativa:** Há uma possível correlação negativa entre atividade física intensa (passos diários) e a *duração* do sono, sugerindo que exercício em excesso pode impactar o tempo de sono.
-        """)
+        - <span style="color:green;"> **Correlação positiva:**</span> Atividade física e passos diários mostram uma correlação positiva com a *qualidade* do sono. Pessoas mais ativas tendem a ter um sono de melhor qualidade.
+        - <span style="color:orange;"> **Correlação moderada:**</span> A *duração* do sono tem uma correlação moderada com a qualidade, indicando que mais tempo dormindo não significa, necessariamente, um sono melhor.
+        - <span style="color:red;"> **Correlação negativa:**</span> Há uma possível correlação negativa entre atividade física intensa (passos diários) e a *duração* do sono, sugerindo que exercício em excesso pode impactar o tempo de sono.
+        """, unsafe_allow_html=True)
         
         st.subheader("💡 Implicações Práticas")
 
@@ -34,10 +34,10 @@ with st.container(border=True):
         
         st.markdown("""
         **Principais observações:**
-        - **Forte correlação negativa:** Quanto maior o nível de estresse, pior a qualidade do sono.
-        - **Correlação moderada:** O estresse também pode impactar negativamente a duração do sono, mas com menor intensidade.
-        - **Impacto principal:** A qualidade do sono parece ser a variável mais afetada pelo estresse.
-        """)
+        - <span style="color:green;"> **Correlação positiva:**</span> Nível de estresse mostra uma correlação positiva com a *qualidade* do sono. Pessoas mais ativas tendem a ter um sono de melhor qualidade.
+        - <span style="color:orange;"> **Correlação moderada:**</span> O estresse também pode impactar negativamente a duração do sono, mas com menor intensidade.
+        - <span style="color:red;"> **Correlação negativa:**</span> Quanto maior o nível de estresse, pior a qualidade do sono.
+        """, unsafe_allow_html=True)
 
         st.subheader("💡 Implicações Práticas")
         
@@ -52,10 +52,10 @@ with st.container(border=True):
 
         st.markdown("""
         **Principais observações:**
-        - **Correlação positiva:** IMC elevado tende a se correlacionar com uma frequência cardíaca mais alta.
-        - **Correlação negativa:** Um IMC mais alto está associado a uma pior qualidade do sono.
-        - **Possível efeito cascata:** A frequência cardíaca elevada também pode se correlacionar negativamente com a qualidade do sono.
-        """)
+        - <span style="color:green;"> **Correlação positiva:**</span> IMC elevado tende a se correlacionar com uma frequência cardíaca mais alta.
+        - <span style="color:orange;"> **Correlação moderada:**</span> A frequência cardíaca elevada também pode se correlacionar negativamente com a qualidade do sono.
+        - <span style="color:red;"> **Correlação negativa:**</span> Um IMC mais alto está associado a uma pior qualidade do sono.
+        """, unsafe_allow_html=True)
 
         st.subheader("💡 Implicações Práticas")
 
