@@ -65,23 +65,52 @@ def create_db_anac():
         decolagens INTEGER,
         horas_voadas INTEGER,
         assentos INTEGER,
-        payload INTEGER
+        payload INTEGER,
+        empresa_nacionalidade TEXT NOT NULL,
+        passageiros_gratis INTEGER NOT NULL,
+        empresa_nome TEXT NOT NULL
     )   
     ''')
 
     df = pd.read_csv("data/resumo_anual_2025.csv", sep=';',encoding='latin1')
+    columns_to_fill_zero = [
+    "PASSAGEIROS PAGOS", "PASSAGEIROS GRÁTIS"
+]
+    for col in columns_to_fill_zero:
+        df[col] = df[col].fillna(0)
     cursor.execute('SELECT COUNT(*) FROM viagens')
     if cursor.fetchone()[0] == 0:
         for _, linha in df.iterrows():
             cursor.execute('''
                 INSERT INTO viagens
                 (sigla_empresa, ano, mes, aeroporto_origem_sigla, aeroporto_origem_pais, aeroporto_destino_sigla, aeroporto_destino_pais, natureza, passageiros_pagos,
-                carga_paga, ask, rpk, atk, rtk, litros_combustivel, distancia_voada_km, decolagens, horas_voadas, assentos, payload) 
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-            ''', (linha['EMPRESA (SIGLA)'], linha['ANO'], linha['MÊS'], linha['AEROPORTO DE ORIGEM (SIGLA)'], linha['AEROPORTO DE ORIGEM (PAÍS)'], linha['AEROPORTO DE DESTINO (SIGLA)'],
-                linha['AEROPORTO DE DESTINO (PAÍS)'], linha['NATUREZA'], linha['PASSAGEIROS PAGOS'], linha['CARGA PAGA (KG)'], linha['ASK'], linha['RPK'], linha['ATK'], linha['RTK'],
-                linha['COMBUSTÍVEL (LITROS)'], linha['DISTÂNCIA VOADA (KM)'], linha['DECOLAGENS'], linha['HORAS VOADAS'], linha['ASSENTOS'], linha['PAYLOAD']))
-            
+                carga_paga, ask, rpk, atk, rtk, litros_combustivel, distancia_voada_km, decolagens, horas_voadas, assentos, payload, empresa_nacionalidade, passageiros_gratis, empresa_nome) 
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ''', (linha['EMPRESA (SIGLA)'], 
+                  linha['ANO'], 
+                  linha['MÊS'],
+                  linha['AEROPORTO DE ORIGEM (SIGLA)'],
+                  linha['AEROPORTO DE ORIGEM (PAÍS)'], 
+                  linha['AEROPORTO DE DESTINO (SIGLA)'],
+                  linha['AEROPORTO DE DESTINO (PAÍS)'],
+                  linha['NATUREZA'], 
+                  linha['PASSAGEIROS PAGOS'],
+                  linha['CARGA PAGA (KG)'], 
+                  linha['ASK'], 
+                  linha['RPK'], 
+                  linha['ATK'], 
+                  linha['RTK'],
+                  linha['COMBUSTÍVEL (LITROS)'], 
+                  linha['DISTÂNCIA VOADA (KM)'], 
+                  linha['DECOLAGENS'], 
+                  linha['HORAS VOADAS'], 
+                  linha['ASSENTOS'], 
+                  linha['PAYLOAD'], 
+                  linha["EMPRESA (NACIONALIDADE)"], 
+                  linha["PASSAGEIROS GRÁTIS"],
+                  linha["EMPRESA (NOME)"]
+                  ))
+
     conn.commit()
     conn.close()
     
