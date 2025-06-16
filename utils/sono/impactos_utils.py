@@ -32,8 +32,7 @@ def show_occupation_count_chart():
         labels={
             'Frequência': 'Número de Pessoas',
             'profissao': 'Profissão'
-        },
-        height=600
+        }
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -50,7 +49,7 @@ def show_sleep_disorder_frequency_chart():
         sleep_crosstab,
         text_auto=True,
         aspect="auto",
-        title="Correlação entre Variáveis Sono e Profissão",
+        title="Correlação entre Variáveis Condições do Sono e Profissão",
         color_continuous_scale=get_color_correlacoes_sono()
     )
     st.plotly_chart(fig_corr, use_container_width=True)
@@ -114,7 +113,7 @@ def show_stress_level_heart_rate_chart():
 
     st.plotly_chart(fig, use_container_width=True)
 
-def show_health_risk_per_occupation():
+def show_apnea_risk_per_occupation():
     risk_df = df.groupby('profissao').agg(
         sleep_apnea_prevalence=('condicao_sono', lambda x: (x == 'Sleep Apnea').mean()),
         avg_heart_rate=('taxa_batimentos', 'mean'),
@@ -137,13 +136,54 @@ def show_health_risk_per_occupation():
             'avg_stress': 'Nível Médio de Estresse',
             'profissao': 'Profissão'
         },
-        title='Risco de Saúde por Ocupação'
+        title='Prevalência de Apneia do Sono'
     )
 
     # Adiciona anotações para pontos com prevalência > 0.3
     for i, row in risk_df[risk_df['sleep_apnea_prevalence'] > 0.3].iterrows():
         fig.add_annotation(
             x=row['sleep_apnea_prevalence'],
+            y=row['avg_heart_rate'],
+            text=row['profissao'],
+            showarrow=True,
+            arrowhead=2,
+            ax=20,
+            ay=-20,
+            font=dict(color='red', size=12)
+        )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+def show_insomnia_risk_per_occupation():
+    risk_df = df.groupby('profissao').agg(
+        insomnia_prevalence=('condicao_sono', lambda x: (x == 'Insomnia').mean()),
+        avg_heart_rate=('taxa_batimentos', 'mean'),
+        avg_stress=('nivel_estresse', 'mean')
+    ).reset_index()
+
+    # Cria o scatter plot
+    fig = px.scatter(
+        risk_df,
+        x='insomnia_prevalence',
+        y='avg_heart_rate',
+        size='avg_stress',
+        color='profissao',
+        color_discrete_sequence=get_color(),
+        size_max=50,
+        opacity=0.8,
+        labels={
+            'insomnia_prevalence': 'Prevalência de Insônia',
+            'avg_heart_rate': 'Média de Batimentos Cardíacos',
+            'avg_stress': 'Nível Médio de Estresse',
+            'profissao': 'Profissão'
+        },
+        title='Prevalência de Insônia'
+    )
+
+    # Adiciona anotações para pontos com prevalência > 0.3
+    for i, row in risk_df[risk_df['insomnia_prevalence'] > 0.3].iterrows():
+        fig.add_annotation(
+            x=row['insomnia_prevalence'],
             y=row['avg_heart_rate'],
             text=row['profissao'],
             showarrow=True,

@@ -1,9 +1,10 @@
 import streamlit as st
 from utils.sono.impactos_utils import (
-    show_health_risk_per_occupation, 
+    show_apnea_risk_per_occupation, 
     show_occupation_count_chart, 
     show_sleep_disorder_frequency_chart, 
-    show_stress_level_heart_rate_chart
+    show_stress_level_heart_rate_chart,
+    show_insomnia_risk_per_occupation
 )
 
 col1, col2 = st.columns([0.9, 0.12],vertical_alignment="bottom")
@@ -41,6 +42,10 @@ st.divider()
 
 st.header("3. Síntese do Risco de Saúde por Profissão")
 with st.container():
-    show_health_risk_per_occupation()
+    tab1, tab2 = st.tabs(["Apneia", "insônia"])
+    with tab1:
+        show_apnea_risk_per_occupation()
+    with tab2:
+        show_insomnia_risk_per_occupation()
 
     
