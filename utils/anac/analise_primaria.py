@@ -261,7 +261,7 @@ def ask_rpk(df):
 
     fig.update_layout(
         barmode='group',
-        title='Fator de Utilização de Carga',
+        title='Fator de Utilização de Assentos',
         xaxis_title='Empresa',
         yaxis_title='APK e RPK',
         xaxis_tickangle=-45,

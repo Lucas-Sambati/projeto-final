@@ -49,7 +49,7 @@ def show_sleep_disorder_frequency_chart():
         sleep_crosstab,
         text_auto=True,
         aspect="auto",
-        title="Correlação entre Variáveis Condições do Sono e Profissão",
+        title="Proporção entre Variáveis Condições do Sono e Profissão",
         color_continuous_scale=get_color_correlacoes_sono()
     )
     st.plotly_chart(fig_corr, use_container_width=True)
